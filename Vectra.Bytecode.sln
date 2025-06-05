@@ -5,6 +5,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{102D89FE-1FD4-46EC-B441-1DD5C7F17DF5}"
 	ProjectSection(SolutionItems) = preProject
 		nuget.config = nuget.config
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vectra.Bytecode.Tests", "Vectra.Bytecode.Tests\Vectra.Bytecode.Tests.csproj", "{74A45489-A5F3-4B4F-A0CB-BF52BD0BF849}"
@@ -12,6 +13,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vectra.AST.Tests", "Vectra.AST.Tests\Vectra.AST.Tests.csproj", "{28EDFBCC-738A-4A27-929B-EEB4FBAE43F1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vectra.AST", "Vectra.AST\Vectra.AST.csproj", "{524BD91A-4310-4360-BFB2-34437FDD1F5D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{48A8116E-648A-4EF5-80E1-EE515926711A}"
+	ProjectSection(SolutionItems) = preProject
+		.github\actions\pr.yaml = .github\actions\pr.yaml
+		.github\actions\release.yaml = .github\actions\release.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

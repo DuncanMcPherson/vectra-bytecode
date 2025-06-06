@@ -1,0 +1,71 @@
+name: Build and release (Vectra.AST)
+on:
+  pull_request: 
+    branches:
+      - master
+    types:
+      - closed
+    paths:
+      - '**/Vectra.AST/**'
+env:
+  PROJECT: Vectra.AST
+
+jobs:
+  versioning:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    name: Bump Version
+    steps:
+      - name: Checkout code & full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: "Install Node.js"
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+      - name: "Install semantic-release"
+        run: |
+          npm install --no-save \
+          semantic-release \
+          @semantic-release/commit-analyzer \
+          @semantic-release/release-notes-generator \
+          @semantic-release/changelog \
+          @semantic-release/exec \
+          @semantic-release/git \
+          @semantic-release/github
+      - name: Run semantic release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx semantic-release --no-ci
+  build:
+    runs-on: ubuntu-latest
+    needs: versioning
+    name: Build and Release new package
+    if: needs.versioning.result == 'success'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+      - name: Restore and Build AST
+        run: |
+          dotnet restore ${{ env.PROJECT }}/${{ env.PROJECT }}.csproj
+          dotnet build ${{ env.PROJECT }}/${{ env.PROJECT }}.csproj --configuration Release
+      - name: Pack AST
+        run: dotnet pack ${{ env.PROJECT }}/${{ env.PROJECT }}.csproj --configuration Release --output ./nupkgs/ast
+      - name: Publish Vectra.AST to github packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for pkg in ./nupkgs/ast/*.nupkg; do
+            dotnet nuget push "$pkg" \
+              --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+              --api-key "$GITHUB_TOKEN" \
+              --skip-duplicate
+          done

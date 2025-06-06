@@ -1,6 +1,110 @@
+name: Validate Changes
+
 on:
-  pull_request: 
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
-    
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Cache NuGet
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Setup .Net 9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+      - name: Build and restore
+        run: |
+          dotnet restore
+          dotnet build ./Vectra.Bytecode.sln --configuration Release --no-restore
+  test:
+    runs-on: ubuntu-latest
+    name: Test
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Cache nuget
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Setup .Net 9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+      - name: Restore and Test
+        run: |
+          dotnet restore
+          dotnet test ./Vectra.Bytecode.sln --configuration Release \
+          --logger "trx;LogFileName=TestResults.trx" \
+          --collect:"XPlat Code Coverage"
+          --parallel
+        continue-on-error: false
+      - name: Generate coverage report
+        run: |
+          # Install ReportGenerator globally
+          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.0.5
+          export PATH="$HOME/.dotnet/tools:$PATH"
+
+          # Find the Cobertura coverage XML (Coverlet’s default)
+          COVERAGE_XML=$(find . -type f -path "*/TestResults/*/coverage.cobertura.xml" | head -n 1)
+
+          if [ -z "$COVERAGE_XML" ]; then
+            echo "⚠️ Coverage file not found."
+            exit 1
+          fi
+
+          # Generate an HTML summary and a Markdown summary
+          reportgenerator \
+            -reports:"$COVERAGE_XML" \
+            -targetdir:"coverage-report" \
+            -reporttypes:HtmlSummary;MarkdownSummary
+
+          # Append the markdown summary (Coverage.txt) to the GitHub job summary
+          echo "## Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          cat coverage-report/Coverage.md >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+      - name: Fail if coverage below threshold
+        env:
+          THRESHOLD: 0.0 # TODO: This is a temporary value. Change it as soon as we have actual tests
+        run: |
+          # Extract the “Total | … | Coverage [%]” line from Coverage.md
+          TOTAL_LINE=$(grep -E "\|\s*Total\s*\|" coverage-report/Coverage.md)
+            
+          if [ -z "$TOTAL_LINE" ]; then
+            echo "❌ Could not find the 'Total' row in coverage-report/Coverage.md"
+            exit 1
+          fi
+            
+          # The last column (Coverage [%]) is the final '|'‐delimited field
+          TOTAL_COVERAGE=$(echo "$TOTAL_LINE" | awk -F'|' '{ print $NF }' | tr -d ' %')
+            
+          echo "ℹ️ Total coverage is $TOTAL_COVERAGE% (threshold is $THRESHOLD%)"
+            
+          # Compare floats: if TOTAL_COVERAGE < THRESHOLD, exit 1 to fail this step
+          awk -v cov="$TOTAL_COVERAGE" -v thr="$THRESHOLD" \
+            'BEGIN { if (cov + 0 < thr + 0) { print "❌ Coverage below threshold"; exit 1 } else { print "✅ Coverage meets threshold"; exit 0 } }'
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: TestResults
+          path: '**/TestResults/**/*.trx'
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: CoverageReport
+          path: |
+            coverage-report
+            '**/TestResults/**/*.xml'

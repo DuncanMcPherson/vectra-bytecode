@@ -18,6 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\release.yaml = .github\workflows\release.yaml
 		.github\workflows\pr.yaml = .github\workflows\pr.yaml
+		.github\workflows\documentation.yaml = .github\workflows\documentation.yaml
+		.github\workflows\release-ast.yaml = .github\workflows\release-ast.yaml
+		.github\workflows\release-bytecode.yaml = .github\workflows\release-bytecode.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AST-Config", "AST-Config", "{5B066A63-55D7-42B6-BD67-EE858953877E}"

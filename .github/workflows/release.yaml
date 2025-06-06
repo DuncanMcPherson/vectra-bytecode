@@ -1,20 +1,23 @@
-name: Build and release (Vectra.AST)
+name: Build and release
 on:
-  pull_request: 
-    branches:
-      - master
-    types:
-      - closed
-    paths:
-      - '**/Vectra.AST/**'
-env:
-  PROJECT: Vectra.AST
+  workflow_call: 
+    inputs: 
+      project-name:
+        description: 'Name of the project to be built'
+        required: true
+        type: 'string'
+      nuget-output:
+        description: 'Folder for nuget package output'
+        required: true
+        type: string
 
 jobs:
   versioning:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     name: Bump Version
+    defaults: 
+      run:
+        working-directory: ${{inputs.project-name}}
     steps:
       - name: Checkout code & full history
         uses: actions/checkout@v3
@@ -55,15 +58,15 @@ jobs:
           dotnet-version: '9.0.x'
       - name: Restore and Build AST
         run: |
-          dotnet restore ${{ env.PROJECT }}/${{ env.PROJECT }}.csproj
-          dotnet build ${{ env.PROJECT }}/${{ env.PROJECT }}.csproj --configuration Release
+          dotnet restore ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
+          dotnet build ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj --configuration Release
       - name: Pack AST
-        run: dotnet pack ${{ env.PROJECT }}/${{ env.PROJECT }}.csproj --configuration Release --output ./nupkgs/ast
+        run: dotnet pack ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj --configuration Release --output ${{ inputs.nuget-output }}
       - name: Publish Vectra.AST to github packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for pkg in ./nupkgs/ast/*.nupkg; do
+          for pkg in ./${{inputs.nuget-output}}/*.nupkg; do
             dotnet nuget push "$pkg" \
               --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
               --api-key "$GITHUB_TOKEN" \

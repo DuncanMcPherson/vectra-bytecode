@@ -1,0 +1,15 @@
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'Vectra.Bytecode/**'
+    paths-ignore:
+      - 'Vectra.Bytecode/CHANGELOG.md'
+
+jobs: 
+  build:
+    uses: ./.github/workflows/release.yaml
+    with:
+      project-name: Vectra.Bytecode
+      nuget-output: nupkgs/bytecode

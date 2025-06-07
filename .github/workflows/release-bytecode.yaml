@@ -1,15 +1,24 @@
 on:
-  push:
+  pull_request:
     branches:
       - master
     paths:
       - 'Vectra.Bytecode/**'
-    paths-ignore:
-      - 'Vectra.Bytecode/CHANGELOG.md'
+    types:
+      - closed
 
 jobs: 
   build:
+    if: github.event.pull_request.merged == true
     uses: ./.github/workflows/release.yaml
     with:
       project-name: Vectra.Bytecode
       nuget-output: nupkgs/bytecode
+  doc:
+    needs: build
+    uses: ./.github/workflows/documentation.yaml
+    with:
+      project-name: Vectra.Bytecode
+      output-dir: docs/wiki
+      wiki-token: ${{secrets.WIKI_TOKEN}}
+      wiki-repo: ${{github.repository}}

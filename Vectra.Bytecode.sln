@@ -4,7 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vectra.Bytecode", "Vectra.B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{102D89FE-1FD4-46EC-B441-1DD5C7F17DF5}"
 	ProjectSection(SolutionItems) = preProject
-		nuget.config = nuget.config
 		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection

@@ -1,12 +1,12 @@
 on:
-  pull_request:
+  push:
     branches:
       - master
     paths:
       - 'Vectra.Bytecode/**'
-      - '.github/workflows/*'
-    types:
-      - closed
+      - '.github/workflows/**'
+    tags-ignore:
+      - *
 
 permissions:
   packages: write
@@ -15,7 +15,9 @@ permissions:
 
 jobs: 
   build:
-    if: github.event.pull_request.merged == true
+    if: >
+      startsWith(github.ref, 'refs/heads/master') &&
+      !contains(github.event.head_commit.message, '[skip ci]')
     uses: ./.github/workflows/release.yaml
     with:
       project-name: Vectra.Bytecode
@@ -31,3 +33,11 @@ jobs:
       wiki-repo: ${{github.repository}}
     secrets: 
       wiki-token: ${{ secrets.WIKI_TOKEN }}
+  noop-on-skip:
+    needs: build
+    if: ${{ needs.build.result == 'skipped' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Nothing to release
+        run: |
+          echo "No Bytecode or workflow changes detected ─ exiting cleanly ✅"

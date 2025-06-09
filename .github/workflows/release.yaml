@@ -19,6 +19,12 @@ jobs:
       run:
         working-directory: ${{inputs.project-name}}
     steps:
+      - name: Generate Github App token
+        id: get-app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Checkout code & full history
         uses: actions/checkout@v3
         with:
@@ -38,9 +44,14 @@ jobs:
           @semantic-release/exec \
           @semantic-release/git \
           @semantic-release/github
+      - name: Set remote with app token
+        run: |
+          git config --global user.name "release-bot[app]"
+          git config --global user.email "release-bot[app]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${{ steps.get-app-token.outputs.token }}@github.com/${{ github.repository }}.git"
       - name: Run semantic release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.get-app-token.outputs.token }}
         run: |
           npx semantic-release --no-ci
   build:

@@ -89,8 +89,7 @@ jobs:
         run: dotnet pack ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj --configuration Release --output ${{ inputs.nuget-output }}
       - name: Authenticate to GithubPackages
         run: |
-          dotnet tool install Nuget.CommandLine
-          nuget.exe sources add \
+          dotnet nuget sources add \
           -Name "github"
           -Source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" \
           -Username "${{ github.actor }}" \

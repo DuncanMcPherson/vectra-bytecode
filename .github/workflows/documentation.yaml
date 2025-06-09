@@ -1,0 +1,47 @@
+name: Build and publish documentation
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        required: true
+        type: string
+      output-dir:
+        required: true
+        type: string
+      wiki-token:
+        required: true
+        type: string
+      wiki-repo:
+        required: true
+        type: string
+        description: The repo owner name and repo name
+
+jobs:
+  docfx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup .Net SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Install DocFX
+        run: dotnet tool install -g docfx
+      - name: Build DocFX
+        run: |
+          cd ${{inputs.project-name}}
+          docfx docfx.json --output ${{inputs.output-dir}}
+      - name: Push to wiki
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git clone "https://x-access-token:${{ inputs.wiki-token }}@github.com/${{inputs.wiki-repo}}.wiki.git
+          cp -r ${{ inputs.project-name }}/${{inputs.output-dir}}/* wiki/${{inputs.project-name}}
+          cd -r ${{ inputs.project-name }}/CHANGELOG.md wiki/${{inputs.project-name}}
+          cd wiki
+          git add .
+          git commit -m "Updated wiki docs for ${{inputs.project-name}}
+          git push

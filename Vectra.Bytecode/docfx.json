@@ -1,0 +1,16 @@
+{
+  "build": {
+    "content": [
+      {
+        "files": [ "articles/**/*.md" ],
+        "dest": "."
+      },
+      {
+        "files": [ "toc.yml" ]
+      }
+    ],
+    "resource": [],
+    "overwrite": [],
+    "dest": "docs/wiki"
+  }
+}

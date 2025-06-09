@@ -50,7 +50,6 @@ jobs:
           dotnet test ./Vectra.Bytecode.sln --configuration Release \
           --logger "trx;LogFileName=TestResults.trx" \
           --collect:"XPlat Code Coverage"
-          --parallel
         continue-on-error: false
       - name: Generate coverage report
         run: |

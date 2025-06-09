@@ -63,15 +63,8 @@ jobs:
         run: |
           set -euxo pipefail
           
-          echo "📂 coverage-report contents:"
-          ls -R coveragereport
-          
           SUMMARY_FILE=$(find coveragereport -maxdepth 1 -type f -iname "*.md" | head -n1)
           echo "Using summary file: $SUMMARY_FILE"
-          
-          echo "------ BEGIN $SUMMARY_FILE ------"
-          cat "$SUMMARY_FILE"
-          echo "------- END $SUMMARY_FILE -------"
           
           LINE_COV_ROW=$(grep -E "^\|\s*\*\*Line coverage:\*\*" "$SUMMARY_FILE" || true)
           if [ -z "$LINE_COV_ROW" ]; then

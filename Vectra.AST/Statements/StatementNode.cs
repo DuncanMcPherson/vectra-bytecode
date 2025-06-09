@@ -31,6 +31,12 @@ public abstract class StatementNode : IAstNode
     /// within the AST. It defines a source span that describes the location of the statement in the source code.
     /// </remarks>
     protected StatementNode(SourceSpan span) => Span = span;
-    
+
+    /// <summary>
+    /// Accepts a visitor that implements the <see cref="IAstVisitor{T}"/> interface and allows the visitor to process the current node.
+    /// </summary>
+    /// <typeparam name="T">The type of value produced by the visitor.</typeparam>
+    /// <param name="visitor">The visitor instance responsible for processing the node.</param>
+    /// <returns>A value of type <typeparamref name="T"/> produced by the visitor.</returns>
     public abstract T Accept<T>(IAstVisitor<T> visitor);
 }

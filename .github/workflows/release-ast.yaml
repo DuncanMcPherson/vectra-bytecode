@@ -6,7 +6,7 @@ on:
       - 'Vectra.AST/**'
       - '.github/workflows/*'
     tags-ignore:
-      - *
+      - '*'
         
 permissions:
   packages: write

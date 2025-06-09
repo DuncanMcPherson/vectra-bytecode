@@ -22,11 +22,9 @@ jobs:
       - name: Generate Github App token
         id: get-app-token
         uses: actions/create-github-app-token@v1
-        env:
-          MY_SECRET: ${{ secrets.APP_PRIVATE_KEY }}
         with:
           app-id: 1385001
-          private-key: ${{ env.MY_SECRET }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Checkout code & full history
         uses: actions/checkout@v3
         with:

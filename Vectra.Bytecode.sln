@@ -6,6 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{102D89
 	ProjectSection(SolutionItems) = preProject
 		nuget.config = nuget.config
 		.gitignore = .gitignore
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vectra.Bytecode.Tests", "Vectra.Bytecode.Tests\Vectra.Bytecode.Tests.csproj", "{74A45489-A5F3-4B4F-A0CB-BF52BD0BF849}"

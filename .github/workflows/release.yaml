@@ -23,7 +23,7 @@ jobs:
         id: get-app-token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ secrets.APP_ID }}
+          app-id: 1385001
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Checkout code & full history
         uses: actions/checkout@v3

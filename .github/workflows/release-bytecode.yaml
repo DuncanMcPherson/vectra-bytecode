@@ -4,6 +4,7 @@ on:
       - master
     paths:
       - 'Vectra.Bytecode/**'
+      - '.github/workflows/*'
     types:
       - closed
 

@@ -97,12 +97,12 @@ jobs:
           awk -v cov="$TOTAL_COVERAGE" -v thr="$THRESHOLD" \
             'BEGIN { if (cov + 0 < thr + 0) { print "❌ Coverage below threshold"; exit 1 } else { print "✅ Coverage meets threshold"; exit 0 } }'
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: TestResults
           path: '**/TestResults/**/*.trx'
       - name: Upload coverage report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: CoverageReport
           path: |

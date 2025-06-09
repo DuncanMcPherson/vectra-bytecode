@@ -10,6 +10,9 @@ on:
         description: 'Folder for nuget package output'
         required: true
         type: string
+    secrets:
+      APP_PRIVATE_KEY:
+        required: true
 
 jobs:
   versioning:

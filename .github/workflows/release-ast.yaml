@@ -20,5 +20,6 @@ jobs:
     with:
       project-name: Vectra.AST
       output-dir: docs/wiki
-      wiki-token: ${{secrets.WIKI_TOKEN}}
       wiki-repo: ${{github.repository}}
+    secrets:
+      wiki-token: ${{secrets.WIKI_TOKEN}}

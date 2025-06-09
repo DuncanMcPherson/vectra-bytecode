@@ -1,3 +1,5 @@
+using Vectra.AST.Declarations.Interfaces;
+
 namespace Vectra.AST.Declarations;
 
 /// <summary>

@@ -1,4 +1,4 @@
-namespace Vectra.AST.Declarations;
+namespace Vectra.AST.Declarations.Interfaces;
 
 /// <summary>
 /// Represents a member node in the abstract syntax tree (AST).

@@ -53,7 +53,7 @@ jobs:
           @semantic-release/git \
           @semantic-release/github
       - name: Who am I?
-        run: gh api user
+        run: gh api /app
         env:
           GITHUB_TOKEN: ${{steps.get-app-token.outputs.token}}
       - name: Set remote with app token

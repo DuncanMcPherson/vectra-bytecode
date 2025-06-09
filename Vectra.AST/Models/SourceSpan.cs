@@ -1,4 +1,4 @@
-namespace Vectra.AST;
+namespace Vectra.AST.Models;
 
 /// Represents a range within a source file, defined by its start and end line and column positions.
 /// This provides a way to track specific portions of source code, such as for error reporting or debugging.

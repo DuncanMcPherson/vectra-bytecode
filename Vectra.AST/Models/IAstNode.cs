@@ -1,4 +1,4 @@
-﻿namespace Vectra.AST;
+﻿namespace Vectra.AST.Models;
 
 /// <summary>
 /// Represents a node in the abstract syntax tree (AST).

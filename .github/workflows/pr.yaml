@@ -70,13 +70,13 @@ jobs:
           fi
             
           # The last column (Coverage [%]) is the final '|'‐delimited field
-          TOTAL_COVERAGE=$(echo "$TOTAL_LINE" | awk -F'|' '{ print $NF }' | tr -d ' %')
+          TOTAL_COVERAGE=$(echo "$TOTAL_LINE" | awk -F'|' '{ echo $NF }' | tr -d ' %')
             
           echo "ℹ️ Total coverage is $TOTAL_COVERAGE% (threshold is $THRESHOLD%)"
             
           # Compare floats: if TOTAL_COVERAGE < THRESHOLD, exit 1 to fail this step
           awk -v cov="$TOTAL_COVERAGE" -v thr="$THRESHOLD" \
-            'BEGIN { if (cov + 0 < thr + 0) { print "❌ Coverage below threshold"; exit 1 } else { print "✅ Coverage meets threshold"; exit 0 } }'
+            'BEGIN { if (cov + 0 < thr + 0) { echo "❌ Coverage below threshold"; exit 1 } else { echo "✅ Coverage meets threshold"; exit 0 } }'
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:

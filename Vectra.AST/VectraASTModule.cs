@@ -22,7 +22,16 @@ public class VectraASTModule(string name, List<SpaceDeclarationNode> spaces)
     /// structure and can act as a reference for organizing or analyzing declarations.
     /// </remarks>
     public string Name { get; } = name;
-    
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this module is executable.
+    /// </summary>
+    /// <remarks>
+    /// The <see cref="IsExecutable"/> property determines if the module can be executed as part of
+    /// the program's runtime behavior. This property is typically used to distinguish between modules
+    /// that serve as executable entry points and those that are purely declarative or provide
+    /// supporting functionality only.
+    /// </remarks>
     public bool IsExecutable { get; set; } = true;
 
     /// <summary>

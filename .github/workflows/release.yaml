@@ -90,7 +90,7 @@ jobs:
       - name: Authenticate to GithubPackages
         run: |
           dotnet nuget add source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" \
-          --name "github" \
+          --name "dmcphgh" \
           --username "${{ github.actor }}" \
           --password "${{steps.get-app-token.outputs.token}}" \
           --store-password-in-clear-text
@@ -99,7 +99,7 @@ jobs:
         run: |
           for pkg in ./${{inputs.nuget-output}}/*.nupkg; do
             dotnet nuget push "$pkg" \
-              --source "github" \
+              --source "dmcphgh" \
               --api-key "${{steps.get-app-token.outputs.token}}" \
               --skip-duplicate
           done

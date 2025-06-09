@@ -89,9 +89,8 @@ jobs:
         run: dotnet pack ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj --configuration Release --output ${{ inputs.nuget-output }}
       - name: Authenticate to GithubPackages
         run: |
-          dotnet nuget sources add \
+          dotnet nuget source add https://nuget.pkg.github.com/${{github.repository_owner}}/index.json\
           -Name "github"
-          -Source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" \
           -Username "${{ github.actor }}" \
           -Password "${{steps.get-app-token.outputs.token}}" \
           -StorePasswordInClearText

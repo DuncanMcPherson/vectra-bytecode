@@ -51,30 +51,12 @@ jobs:
           --logger "trx;LogFileName=TestResults.trx" \
           --collect:"XPlat Code Coverage"
         continue-on-error: false
-      - name: Generate coverage report
-        run: |
-          # Install ReportGenerator globally
-          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.4.7
-          export PATH="$HOME/.dotnet/tools:$PATH"
-
-          # Find the Cobertura coverage XML (Coverlet’s default)
-          COVERAGE_XML=$(find . -type f -path "*/TestResults/*/coverage.cobertura.xml" | head -n 1)
-
-          if [ -z "$COVERAGE_XML" ]; then
-            echo "⚠️ Coverage file not found."
-            exit 1
-          fi
-
-          # Generate an HTML summary and a Markdown summary
-          reportgenerator \
-            -reports:"$COVERAGE_XML" \
-            -targetdir:"coverage-report" \
-            -reporttypes:HtmlSummary;MarkdownSummary
-
-          # Append the markdown summary (Coverage.txt) to the GitHub job summary
-          echo "## Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
-          cat coverage-report/Coverage.md >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
+      - name: ReportGenerator
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.7
+        with:
+          reports: '**/TestResults/**/coverage.cobertura.xml'
+          targetdir: coveragereport
+          reporttypes: HtmlSummary;MarkdownSummary
       - name: Fail if coverage below threshold
         env:
           THRESHOLD: 0.0 # TODO: This is a temporary value. Change it as soon as we have actual tests

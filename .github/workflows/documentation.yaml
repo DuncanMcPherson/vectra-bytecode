@@ -8,13 +8,13 @@ on:
       output-dir:
         required: true
         type: string
-      wiki-token:
-        required: true
-        type: string
       wiki-repo:
         required: true
         type: string
         description: The repo owner name and repo name
+    secrets: 
+      wiki-token:
+        required: true
 
 jobs:
   docfx:

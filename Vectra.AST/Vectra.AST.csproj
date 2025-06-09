@@ -9,4 +9,8 @@
         <RepositoryUrl>https://github.com/duncanmcpherson/vectra-bytecode</RepositoryUrl>
     </PropertyGroup>
 
+    <ItemGroup>
+      <None Remove="docfx.json" />
+    </ItemGroup>
+
 </Project>

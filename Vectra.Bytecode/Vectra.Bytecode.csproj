@@ -13,4 +13,8 @@
       <ProjectReference Include="..\Vectra.AST\Vectra.AST.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="docfx.json" />
+    </ItemGroup>
+
 </Project>

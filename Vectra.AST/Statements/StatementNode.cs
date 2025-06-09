@@ -33,10 +33,10 @@ public abstract class StatementNode : IAstNode
     protected StatementNode(SourceSpan span) => Span = span;
 
     /// <summary>
-    /// Accepts a visitor that implements the <see cref="IAstVisitor{T}"/> interface to process the current statement node.
+    /// Accepts a visitor that implements the <see cref="IAstVisitor{T}"/> interface and allows the visitor to process the current node.
     /// </summary>
-    /// <typeparam name="T">The type of value returned by the visitor.</typeparam>
-    /// <param name="visitor">The visitor used to process the current statement node.</param>
-    /// <returns>The result of processing the current node, as defined by the visitor implementation.</returns>
+    /// <typeparam name="T">The type of value produced by the visitor.</typeparam>
+    /// <param name="visitor">The visitor instance responsible for processing the node.</param>
+    /// <returns>A value of type <typeparamref name="T"/> produced by the visitor.</returns>
     public abstract T Accept<T>(IAstVisitor<T> visitor);
 }

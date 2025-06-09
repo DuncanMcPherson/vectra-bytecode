@@ -54,7 +54,7 @@ jobs:
       - name: Generate coverage report
         run: |
           # Install ReportGenerator globally
-          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.0.5
+          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.4.7
           export PATH="$HOME/.dotnet/tools:$PATH"
 
           # Find the Cobertura coverage XML (Coverlet’s default)

@@ -33,6 +33,11 @@ jobs:
         with:
           app-id: 1385001
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: Check token validity
+        run: |
+          curl -i -H "Authorization: Bearer ${{ steps.get-app-token.outputs.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/app
       - name: Checkout code & full history
         uses: actions/checkout@v3
         with:

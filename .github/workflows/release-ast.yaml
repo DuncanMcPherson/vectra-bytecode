@@ -26,6 +26,7 @@ jobs:
       nuget-output: nupkgs/ast
     secrets: 
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+      DEPLOY_KEY: ${{ secrets.WIKI_TOKEN }}
   doc:
     needs: build
     uses: ./.github/workflows/documentation.yaml

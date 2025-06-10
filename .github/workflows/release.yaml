@@ -13,7 +13,9 @@ on:
     secrets:
       APP_PRIVATE_KEY:
         required: true
-        
+      DEPLOY_KEY:
+        required: true
+
 permissions: 
   packages: write
   contents: write
@@ -81,12 +83,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: 'false'
-      - name: Generate Github App token
-        id: get-app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: 1385001
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -102,7 +98,7 @@ jobs:
           dotnet nuget add source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" \
           --name "dmcphgh" \
           --username "${{ github.repository_owner }}" \
-          --password "${{steps.get-app-token.outputs.token}}" \
+          --password "${{secrets.DEPLOY_KEY}}" \
           --store-password-in-clear-text
           
       - name: Publish Vectra.AST to github packages
@@ -110,6 +106,6 @@ jobs:
           for pkg in ./${{inputs.nuget-output}}/*.nupkg; do
             dotnet nuget push "$pkg" \
               --source "dmcphgh" \
-              --api-key "${{steps.get-app-token.outputs.token}}" \
+              --api-key "${{secrets.DEPLOY_KEY}}" \
               --skip-duplicate
           done

@@ -35,7 +35,7 @@ jobs:
       output-dir: docs/wiki
       wiki-repo: ${{github.repository}}
     secrets:
-      wiki-token: ${{secrets.WIKI_TOKEN}}
+      wiki-token: ${{secrets.WIKI}}
   noop-on-skip:
     needs: build
     if: needs.build.result == 'skipped'

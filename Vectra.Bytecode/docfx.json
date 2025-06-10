@@ -12,5 +12,20 @@
     "resource": [],
     "overwrite": [],
     "dest": "docs/wiki"
+  },
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [ "Vectra.Bytecode.csproj"],
+          "exclude": ["**/bin/**", "**/obj/**"]
+        }
+      ],
+      "dest": "articles",
+      "outputFormat": "markdown"
+    }
+  ],
+  "tocGeneration": {
+    "autoGenerateToc": true
   }
 }

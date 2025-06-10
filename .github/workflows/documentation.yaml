@@ -41,7 +41,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone "https://x-access-token:${{ inputs.wiki-token }}@github.com/${{inputs.wiki-repo}}.wiki.git"
+          git clone "https://x-access-token:${{ secrets.WIKI_TOKEN }}@github.com/${{inputs.wiki-repo}}.wiki.git"
           cp -r ${{ inputs.project-name }}/${{inputs.output-dir}}/* wiki/${{inputs.project-name}}
           cd -r ${{ inputs.project-name }}/CHANGELOG.md wiki/${{inputs.project-name}}
           cd wiki

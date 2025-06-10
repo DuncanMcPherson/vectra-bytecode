@@ -61,6 +61,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.get-app-token.outputs.token }}
         run: |
+          git config --global user.name
+          git config --global user.email
           npx semantic-release
   build:
     runs-on: ubuntu-latest

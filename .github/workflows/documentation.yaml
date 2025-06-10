@@ -13,7 +13,7 @@ on:
         type: string
         description: The repo owner name and repo name
     secrets: 
-      wiki-token:
+      WIKI:
         required: true
 
 jobs:
@@ -37,14 +37,14 @@ jobs:
           docfx docfx.json --output ${{inputs.output-dir}}
       - name: Push to wiki
         env:
-          GITHUB_TOKEN: ${{secrets.WIKI_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.WIKI}}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone "https://x-access-token:${{ secrets.WIKI_TOKEN }}@github.com/${{inputs.wiki-repo}}.wiki.git"
-          cp -r ${{ inputs.project-name }}/${{inputs.output-dir}}/* wiki/${{inputs.project-name}}
-          cd -r ${{ inputs.project-name }}/CHANGELOG.md wiki/${{inputs.project-name}}
-          cd wiki
+          git clone "https://x-access-token:${{ secrets.WIKI }}@github.com/${{inputs.wiki-repo}}.wiki.git"
+          cp -r ${{ inputs.project-name }}/${{inputs.output-dir}}/* vectra-bytecode.wiki/${{inputs.project-name}}
+          cp -r ${{ inputs.project-name }}/CHANGELOG.md vectra-bytecode.wiki/${{inputs.project-name}}
+          cd vectra-bytecode.wiki
           git add .
           git commit -m "Updated wiki docs for ${{inputs.project-name}}"
           git push

@@ -87,21 +87,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '9.0.x'
-      - name: Add Private Nuget source
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          dotnet nuget add source https://nuget.pkg.github.com/DuncanMcPherson/index.json \
-            --name "github" \
-            --username "${{ github.repository_owner }}" \
-            --password "${{ secrets.GITHUB_TOKEN }}" \
-            --store-password-in-clear-text
-      - name: Restore and Build
-        run: |
-          dotnet restore ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
-          dotnet build ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj --configuration Release
-      - name: Pack AST
-        run: dotnet pack ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj --configuration Release --output ${{ inputs.nuget-output }}
       - name: Authenticate to GithubPackages
         run: |
           dotnet nuget add source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" \
@@ -109,7 +94,13 @@ jobs:
           --username "${{ github.repository_owner }}" \
           --password "${{secrets.DEPLOY_KEY}}" \
           --store-password-in-clear-text
-          
+      
+      - name: Restore and Build
+        run: |
+          dotnet restore ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
+          dotnet build ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj --configuration Release
+      - name: Pack AST
+        run: dotnet pack ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj --configuration Release --output ${{ inputs.nuget-output }}
       - name: Publish Vectra.AST to github packages
         run: |
           for pkg in ./${{inputs.nuget-output}}/*.nupkg; do

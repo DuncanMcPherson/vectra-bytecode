@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Setup .Net SDK
         uses: actions/setup-dotnet@v4
         with:
@@ -35,6 +36,8 @@ jobs:
           cd ${{inputs.project-name}}
           docfx docfx.json --output ${{inputs.output-dir}}
       - name: Push to wiki
+        env:
+          GITHUB_TOKEN: ${{secrets.WIKI_TOKEN}}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"

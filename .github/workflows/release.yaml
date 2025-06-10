@@ -52,10 +52,6 @@ jobs:
           @semantic-release/exec \
           @semantic-release/git \
           @semantic-release/github
-      - name: Who am I?
-        run: gh api /app
-        env:
-          GITHUB_TOKEN: ${{steps.get-app-token.outputs.token}}
       - name: Set remote with app token
         run: |
           git config --global user.name "release-bot[app]"
@@ -95,7 +91,7 @@ jobs:
         run: |
           dotnet nuget add source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" \
           --name "dmcphgh" \
-          --username "${{ github.actor }}" \
+          --username "${{ github.repository_owner }}" \
           --password "${{steps.get-app-token.outputs.token}}" \
           --store-password-in-clear-text
           

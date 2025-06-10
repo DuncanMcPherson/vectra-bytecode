@@ -34,7 +34,8 @@ jobs:
       - name: Build DocFX
         run: |
           cd ${{inputs.project-name}}
-          docfx docfx.json --output ${{inputs.output-dir}}
+          docfx metadata docfx.json
+          docfx build docfx.json --output ${{inputs.output-dir}}
       - name: Push to wiki
         env:
           GITHUB_TOKEN: ${{secrets.WIKI}}

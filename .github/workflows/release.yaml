@@ -27,6 +27,10 @@ jobs:
       run:
         working-directory: ${{inputs.project-name}}
     steps:
+      - name: Checkout code & full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Generate Github App token
         id: get-app-token
         uses: actions/create-github-app-token@v1
@@ -38,10 +42,6 @@ jobs:
           curl -i -H "Authorization: Bearer ${{ steps.get-app-token.outputs.token }}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/app
-      - name: Checkout code & full history
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: "Install Node.js"
         uses: actions/setup-node@v3
         with:

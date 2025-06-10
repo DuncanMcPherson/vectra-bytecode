@@ -40,6 +40,6 @@ foreach ($b in $branchesToDelete) {
     git branch -d $b
 }
 
-Write-Host "Clean up complete! May the Force keep your history! (tidy)" -ForegroundColor Green
+Write-Host "Clean up complete! May the Force keep your history tidy!" -ForegroundColor Green
 
 Pop-Location

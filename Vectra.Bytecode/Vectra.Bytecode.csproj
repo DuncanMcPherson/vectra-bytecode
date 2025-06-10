@@ -7,14 +7,15 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Vectra Bytecode</Title>
         <RepositoryUrl>https://github.com/duncanmcpherson/vectra-bytecode</RepositoryUrl>
+        <Version>1.0.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Vectra.AST\Vectra.AST.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="docfx.json" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Vectra.AST" Version="1.0.0" />
     </ItemGroup>
 
 </Project>

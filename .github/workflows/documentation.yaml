@@ -29,13 +29,19 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
+      - name: Authenticate to GithubPackages
+        run: |
+          dotnet nuget add source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" \
+          --name "dmcphgh" \
+          --username "${{ github.repository_owner }}" \
+          --password "${{secrets.WIKI}}" \
+          --store-password-in-clear-text
       - name: Install DocFX
         run: dotnet tool install -g docfx
       - name: Build DocFX
         run: |
           cd ${{inputs.project-name}}
-          docfx metadata docfx.json
-          docfx build docfx.json --output ${{inputs.output-dir}}
+          docfx metadata docfx.json --output ${{inputs.output-dir}}
       - name: Push to wiki
         env:
           GITHUB_TOKEN: ${{secrets.WIKI}}

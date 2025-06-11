@@ -7,10 +7,18 @@
           "exclude": ["**/bin/**", "**/obj/**"]
         }
       ],
-      "dest": ".",
+      "dest": "articles",
       "outputFormat": "markdown"
     }
   ],
+  "build": {
+    "content": [
+      {
+        "files": ["articles/**/*.md"]
+      }
+    ],
+    "dest": "_site"
+  },
   "tocGeneration": {
     "autoGenerateToc": true
   }

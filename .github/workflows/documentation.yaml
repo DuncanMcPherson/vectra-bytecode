@@ -41,16 +41,10 @@ jobs:
       - name: Build DocFX
         run: |
           cd ${{inputs.project-name}}
-          docfx metadata docfx.json --output ${{inputs.output-dir}}
-      - name: Push to wiki
-        env:
-          GITHUB_TOKEN: ${{secrets.WIKI}}
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone "https://x-access-token:${{ secrets.WIKI }}@github.com/${{inputs.wiki-repo}}.wiki.git"
-          cp -r ${{ inputs.project-name }}/${{inputs.output-dir}}/* vectra-bytecode.wiki/${{inputs.project-name}}
-          cd vectra-bytecode.wiki
-          git add .
-          git commit -m "Updated wiki docs for ${{inputs.project-name}}"
-          git push
+          docfx metadata docfx.json
+          docfx build docfx.json
+      - name: Deploy to pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site

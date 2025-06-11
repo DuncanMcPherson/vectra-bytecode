@@ -1,3 +1,6 @@
+[![.github/workflows/release-ast.yaml](https://github.com/DuncanMcPherson/vectra-bytecode/actions/workflows/release-ast.yaml/badge.svg)](https://github.com/DuncanMcPherson/vectra-bytecode/actions/workflows/release-ast.yaml)
+[![.github/workflows/release-bytecode.yaml](https://github.com/DuncanMcPherson/vectra-bytecode/actions/workflows/release-bytecode.yaml/badge.svg)](https://github.com/DuncanMcPherson/vectra-bytecode/actions/workflows/release-bytecode.yaml)
+
 # Vectra Bytecode
 
 ## Overview

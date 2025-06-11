@@ -17,7 +17,7 @@ $primaryBranch = "master"
 $currentBranch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host "Current branch is '$currentBranch'."
 
-$mergedBranches = git branch --merged $primaryBranch |
+$mergedBranches = git branch --merged |
         ForEach-Object { $_.Trim() } |
         Where-Object { -not ($_ -eq "$primaryBranch")} |
         ForEach-Object { $_.TrimStart('*').Trim() }

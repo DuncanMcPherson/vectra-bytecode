@@ -19,7 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\release.yaml = .github\workflows\release.yaml
 		.github\workflows\pr.yaml = .github\workflows\pr.yaml
-		.github\workflows\documentation.yaml = .github\workflows\documentation.yaml
 		.github\workflows\release-ast.yaml = .github\workflows\release-ast.yaml
 		.github\workflows\release-bytecode.yaml = .github\workflows\release-bytecode.yaml
 	EndProjectSection
@@ -27,13 +26,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AST-Config", "AST-Config", "{5B066A63-55D7-42B6-BD67-EE858953877E}"
 	ProjectSection(SolutionItems) = preProject
 		Vectra.AST\.releaserc.json = Vectra.AST\.releaserc.json
-		Vectra.AST\docfx.json = Vectra.AST\docfx.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bytecode-Config", "Bytecode-Config", "{8230EDDF-0455-40FD-9BA3-0FD281CE109D}"
 	ProjectSection(SolutionItems) = preProject
 		Vectra.Bytecode\.releaserc.json = Vectra.Bytecode\.releaserc.json
-		Vectra.Bytecode\docfx.json = Vectra.Bytecode\docfx.json
 	EndProjectSection
 EndProject
 Global

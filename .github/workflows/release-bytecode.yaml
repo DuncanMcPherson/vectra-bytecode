@@ -27,15 +27,6 @@ jobs:
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
       DEPLOY_KEY: ${{ secrets.WIKI_TOKEN }}
-  doc:
-    needs: build
-    uses: ./.github/workflows/documentation.yaml
-    with:
-      project-name: Vectra.Bytecode
-      output-dir: docs/wiki
-      wiki-repo: ${{github.repository}}
-    secrets: 
-      WIKI: ${{ secrets.WIKI }}
   noop-on-skip:
     needs: build
     if: ${{ needs.build.result == 'skipped' }}

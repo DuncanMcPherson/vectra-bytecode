@@ -72,6 +72,13 @@ jobs:
           --username "${{ github.repository_owner }}" \
           --password "${{secrets.DEPLOY_KEY}}" \
           --store-password-in-clear-text
+<<<<<<< Updated upstream
+=======
+      - name: Set up .NET 9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+>>>>>>> Stashed changes
       
       - name: Restore and Build
         run: |

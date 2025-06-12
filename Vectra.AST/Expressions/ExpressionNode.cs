@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Vectra.AST.Models;
 
 namespace Vectra.AST.Expressions;
@@ -23,6 +24,7 @@ public abstract class ExpressionNode : IAstNode
     /// providing detailed error messages to users.
     /// The property is immutable and defined during the construction of the node.
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     public SourceSpan Span { get; }
 
     /// Represents an abstract base class for all expression nodes in the abstract syntax tree (AST).

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Vectra.AST.Models;
 
 namespace Vectra.AST.Statements;
@@ -21,6 +22,7 @@ public abstract class StatementNode : IAstNode
     /// details like the start and end line and column positions in the source text.
     /// This property is implemented from the <c>IAstNode</c> interface.
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     public SourceSpan Span { get; }
 
     /// <summary>

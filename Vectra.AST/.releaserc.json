@@ -1,8 +1,24 @@
 {
-  "branches": ["master"],
+  "branches": [
+    "master"
+  ],
   "tagFormat": "v${version}-ast",
   "plugins": [
-    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          { "scope": "ast", "release": "patch" },
+          { "scope": "ast", "type": "feat", "release": "minor" },
+          { "scope": "ast", "type": "fix", "release": "patch" },
+          { "scope": "ast", "type": "perf", "release": "patch" },
+          { "scope": "ast", "type": "refactor", "release": "patch" },
+          { "scope": "ast", "breaking": true, "release": "major" },
+          { "scope": "*", "release": false }
+        ]
+      }
+    ],
     "@semantic-release/release-notes-generator",
     [
       "@semantic-release/exec",
@@ -24,8 +40,7 @@
       {
         "successComment": "Release v${nextRelease.version} deployed! May the Force be with us.\n\n${nextRelease.notes}",
         "failTitle": "Release failed for v${lastRelease.version}",
-        "failComment":
-        "⚠️ The automated release for v${lastRelease.version} has failed at the `${error.command}` step.\n\n> **Error Message**: ${error.message}\n\nPlease investigate the logs and retrigger the release once fixed."
+        "failComment": "⚠️ The automated release for v${lastRelease.version} has failed at the `${error.command}` step.\n\n> **Error Message**: ${error.message}\n\nPlease investigate the logs and retrigger the release once fixed."
       }
     ]
   ]

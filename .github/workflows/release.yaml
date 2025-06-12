@@ -54,7 +54,8 @@ jobs:
           @semantic-release/changelog \
           @semantic-release/exec \
           @semantic-release/git \
-          @semantic-release/github
+          @semantic-release/github \
+          conventional-changelog-conventionalcommits
       - name: Set remote with app token
         run: |
           git config --global user.name "release-bot[app]"

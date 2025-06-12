@@ -4,7 +4,21 @@
   ],
   "tagFormat": "v${version}-bytecode",
   "plugins": [
-    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          { "scope": "bytecode", "release": "patch" },
+          { "scope": "bytecode", "type": "feat", "release": "minor" },
+          { "scope": "bytecode", "type": "fix", "release": "patch" },
+          { "scope": "bytecode", "type": "perf", "release": "patch" },
+          { "scope": "bytecode", "type": "refactor", "release": "patch" },
+          { "scope": "bytecode", "breaking": true, "release": "major" },
+          { "scope": "*", "release": false }
+        ]
+      }
+    ],
     "@semantic-release/release-notes-generator",
     [
       "@semantic-release/exec",

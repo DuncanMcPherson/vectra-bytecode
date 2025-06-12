@@ -3,15 +3,15 @@ using Vectra.AST.Declarations;
 namespace Vectra.AST;
 
 /// <summary>
-/// Represents a module in the abstract syntax tree (AST).
+/// Represents a module node in the abstract syntax tree (AST) for Vectra.
 /// </summary>
 /// <remarks>
-/// The <c>VectraASTModule</c> class is used to encapsulate the name and associated
-/// namespaces or spaces within a module. It aggregates a collection of
-/// <see cref="SpaceDeclarationNode"/> objects, which define the logical
-/// structure and declarations within the module.
+/// A <see cref="VectraASTModule"/> is a named, top-level construct in the AST, generally representing
+/// a single module or unit of compilation. It has an associated root namespace or space declaration
+/// that organizes the internal structure of the module. Modules can optionally be marked as executable,
+/// allowing differentiation between executable and library modules.
 /// </remarks>
-public class VectraASTModule(string name, List<SpaceDeclarationNode> spaces)
+public class VectraASTModule(string name, SpaceDeclarationNode space)
 {
     /// <summary>
     /// Gets the name of this module.
@@ -35,12 +35,13 @@ public class VectraASTModule(string name, List<SpaceDeclarationNode> spaces)
     public bool IsExecutable { get; set; } = true;
 
     /// <summary>
-    /// Gets the collection of space declarations associated with the module.
+    /// Gets the root namespace or space declaration for this module.
     /// </summary>
     /// <remarks>
-    /// The <c>Spaces</c> property contains a list of <see cref="SpaceDeclarationNode"/> objects that define the
-    /// namespaces or logical groupings in this module. These declarations represent the structure and hierarchy of
-    /// the abstract syntax tree (AST) within the module. Each space declaration may include nested spaces and type declarations.
+    /// The <see cref="RootSpace"/> property represents the top-level namespace or space declaration
+    /// associated with the module. It organizes and structures the internal declarations, facilitating
+    /// hierarchical groupings and access to nested namespaces or type definitions. This property provides
+    /// an entry point into the module's logical structure within the abstract syntax tree (AST).
     /// </remarks>
-    public List<SpaceDeclarationNode> Spaces { get; } = spaces;
+    public SpaceDeclarationNode RootSpace { get; } = space;
 }

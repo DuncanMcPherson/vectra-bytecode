@@ -77,7 +77,7 @@ jobs:
           reporttypes: HtmlSummary;MarkdownSummary
       - name: Fail if coverage below threshold
         env:
-          THRESHOLD: 0.0 # TODO: This is a temporary value. Change it as soon as we have actual tests
+          THRESHOLD: 80.0
         run: |
           set -euxo pipefail
           

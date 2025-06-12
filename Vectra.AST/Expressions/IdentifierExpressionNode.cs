@@ -11,7 +11,7 @@ namespace Vectra.AST.Expressions;
 /// that encapsulates an identifier expression and its associated location in the source code.
 /// It is primarily used during the parsing and analysis phases of a compiler or interpreter.
 /// </remarks>
-public class IdentifierExpressionNode(string name, SourceSpan span) : StatementNode(span)
+public class IdentifierExpressionNode(string name, SourceSpan span) : ExpressionNode(span)
 {
     /// Gets the name associated with the identifier expression.
     /// This property represents the name of the identifier as a string.

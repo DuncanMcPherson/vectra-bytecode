@@ -72,6 +72,8 @@ jobs:
           --username "${{ github.repository_owner }}" \
           --password "${{secrets.DEPLOY_KEY}}" \
           --store-password-in-clear-text
+      - name: Verify build location
+        run: ls
       
       - name: Restore and Build
         run: |

@@ -15,7 +15,10 @@
           { "scope": "bytecode", "type": "perf", "release": "patch" },
           { "scope": "bytecode", "type": "refactor", "release": "patch" },
           { "scope": "bytecode", "breaking": true, "release": "major" },
-          { "scope": "*", "release": false }
+          { "scope": "*", "release": false },
+          { "breaking": true, "scope": "*",
+            "release": false
+          }
         ]
       }
     ],

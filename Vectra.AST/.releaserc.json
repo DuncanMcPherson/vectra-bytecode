@@ -15,7 +15,10 @@
           { "scope": "ast", "type": "perf", "release": "patch" },
           { "scope": "ast", "type": "refactor", "release": "patch" },
           { "scope": "ast", "breaking": true, "release": "major" },
-          { "scope": "*", "release": false }
+          { "scope": "*", "release": false },
+          { "breaking": true, "scope": "*",
+            "release": false
+          }
         ]
       }
     ],

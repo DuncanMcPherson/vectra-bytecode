@@ -72,7 +72,10 @@ jobs:
           --username "${{ github.repository_owner }}" \
           --password "${{secrets.DEPLOY_KEY}}" \
           --store-password-in-clear-text
-      
+      - name: Set up .NET 9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
       - name: Restore and Build
         run: |
           dotnet restore ${{ inputs.project-name }}.csproj

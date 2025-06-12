@@ -40,6 +40,8 @@ public class VbcMethod
     /// A list of <see cref="VbcParameter"/> instances representing the method's parameters.
     /// </value>
     public List<VbcParameter> Parameters { get; init; } = [];
+    
+    public List<string> LocalVariables { get; init; } = [];
 
     /// <summary>
     /// Represents the set of low-level instructions associated with a method in the Vectra bytecode system.

@@ -73,7 +73,7 @@ jobs:
           --password "${{secrets.DEPLOY_KEY}}" \
           --store-password-in-clear-text
       - name: Verify build location
-        run: ls
+        run: cd ../
       
       - name: Restore and Build
         run: |

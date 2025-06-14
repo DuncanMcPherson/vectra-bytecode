@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Vectra.AST;
 using Vectra.AST.Declarations;
 using Vectra.AST.Declarations.Interfaces;
@@ -26,6 +27,7 @@ public class BytecodeGenerator : IAstVisitor<Unit>
 
     private VbcSpace WalkSpace(SpaceDeclarationNode space)
     {
+        ArgumentNullException.ThrowIfNull(space);
         List<VbcType> types = [];
         List<VbcSpace> subspaces = [];
         types.AddRange(space.Declarations.Select(WalkDeclaration));
@@ -61,12 +63,14 @@ public class BytecodeGenerator : IAstVisitor<Unit>
         };
     }
 
+    [ExcludeFromCodeCoverage]
     public Unit VisitClassDeclaration(ClassDeclarationNode node)
     {
         WalkClass(node);
         return Unit.Value;
     }
 
+    [ExcludeFromCodeCoverage]
     public Unit VisitMethodDeclaration(MethodDeclarationNode node)
     {
         WalkMethod(node);

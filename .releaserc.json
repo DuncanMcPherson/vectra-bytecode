@@ -15,7 +15,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "sed -i \"s|<Version>.*</Version>|<Version>${nextRelease.version}</Version>|\" **/*.csproj"
+        "prepareCmd": "sed -i \"s|<Version>.*</Version>|<Version>${nextRelease.version}</Version>|\" Vectra.Bytecode/Vectra.Bytecode.csproj"
       }
     ],
     [

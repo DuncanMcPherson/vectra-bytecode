@@ -26,9 +26,6 @@ jobs:
   versioning:
     runs-on: ubuntu-latest
     name: Bump Version
-    defaults: 
-      run:
-        working-directory: ${{inputs.project-name}}
     steps:
       - name: Checkout code & full history
         uses: actions/checkout@v3

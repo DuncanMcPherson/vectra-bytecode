@@ -76,10 +76,10 @@ jobs:
           dotnet-version: '9.0.x'
       - name: Restore and Build
         run: |
-          dotnet restore ${{ inputs.project-name }}.csproj
-          dotnet build ${{ inputs.project-name }}.csproj --configuration Release
+          dotnet restore
+          dotnet build --configuration Release
       - name: Pack AST
-        run: dotnet pack ${{ inputs.project-name }}.csproj --configuration Release --output ${{ inputs.nuget-output }}
+        run: dotnet pack --configuration Release --output ${{ inputs.nuget-output }}
       - name: Publish Vectra.AST to github packages
         run: |
           for pkg in ./${{inputs.nuget-output}}/*.nupkg; do

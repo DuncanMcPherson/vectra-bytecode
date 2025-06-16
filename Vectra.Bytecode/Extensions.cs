@@ -10,8 +10,9 @@ internal static class Extensions
         writer.Write(value);
     }
 
-    public static string ReadString(this BinaryReader reader, int length)
+    public static string ReadStringValue(this BinaryReader reader)
     {
+        var length = reader.ReadInt32();
         var builder = new StringBuilder();
         for (var i = 0; i < length; i++)
         {

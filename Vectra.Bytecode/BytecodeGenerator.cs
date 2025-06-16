@@ -120,15 +120,10 @@ public class BytecodeGenerator : IAstVisitor<Unit>
             nodeArgument.Accept(this);
         }
         
-        _currentInstructions.Add(new Instruction(OpCode.Call)); // TODO: Fix this, we don't currently pass the method name to the Call Expression node
-        /*
-         * TODO: Add the following class:
-         * public record CallOperand
-         * {
-         *      public string MethodName { get; init; }
-         *      public int ArgumentCount { get; init; }
-         * }
-         */
+        var methodNameIndex = AddConstant(node.MethodName);
+        
+        _currentInstructions.Add(new Instruction(OpCode.Call, methodNameIndex));
+
         return Unit.Value;
     }
 
@@ -157,7 +152,7 @@ public class BytecodeGenerator : IAstVisitor<Unit>
 
     private VbcMethod WalkMethod(MethodDeclarationNode method)
     {
-        var parameters = method.Parameters.Select(type => new VbcParameter { Name = type, TypeName = "any" }).ToList(); // TODO: Update method.Parameters to provide both param name and type
+        var parameters = method.Parameters.Select(type => new VbcParameter { Name = type.Name, TypeName = type.Type }).ToList(); // TODO: Update method.Parameters to provide both param name and type
         _currentConstants = [];
         _currentInstructions = [];
         _localVariables =
@@ -183,5 +178,14 @@ public class BytecodeGenerator : IAstVisitor<Unit>
             LocalVariables = _localVariables,
             Parameters = parameters
         };
+    }
+    
+    private int AddConstant(object value)
+    {
+        var index = _currentConstants.IndexOf(value);
+        if (index != -1) return index;
+        index = _currentConstants.Count;
+        _currentConstants.Add(value);
+        return index;
     }
 }

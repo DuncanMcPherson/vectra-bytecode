@@ -169,7 +169,7 @@ public class BytecodeGeneratorTests
                                     .WithName("TestMethod")
                                     .WithReturnType("void")
                                     .WithParameters([
-                                        "param1", "param2"
+                                        new Parameter("param1", "any"), new Parameter("param2", "any")
                                     ]).Build()
                             ]).Build()
                     ]).Build()
@@ -298,7 +298,7 @@ public class BytecodeGeneratorTests
                             .WithMembers([
                                 new MethodDeclarationNodeBuilder()
                                     .WithBody([
-                                        new IdentifierExpressionNode("this", new())
+                                        new ExpressionStatementNode(new IdentifierExpressionNode("this", new()), new())
                                     ]).Build()
                             ]).Build()
                     ]).Build()
@@ -306,7 +306,7 @@ public class BytecodeGeneratorTests
         var generator = new BytecodeGenerator();
         var result = generator.Generate(module);
         var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
-        method.Instructions.Should().HaveCount(1);
+        method.Instructions.Should().HaveCount(2);
         var instruction = method.Instructions[0];
         instruction.OpCode.Should().Be(OpCode.LoadLocal);
         instruction.Operand.Should().Be(0);
@@ -323,7 +323,9 @@ public class BytecodeGeneratorTests
                             .WithMembers([
                                 new MethodDeclarationNodeBuilder()
                                     .WithBody([
-                                        new IdentifierExpressionNode("foo", new())
+                                        new ExpressionStatementNode(
+                                        new IdentifierExpressionNode("foo", new()),
+                                        new())
                                     ]).Build()
                             ]).Build()
                     ]).Build()
@@ -331,7 +333,7 @@ public class BytecodeGeneratorTests
         var generator = new BytecodeGenerator();
         var result = generator.Generate(module);
         var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
-        method.Instructions.Should().HaveCount(1);
+        method.Instructions.Should().HaveCount(2);
         var instruction = method.Instructions[0];
         instruction.OpCode.Should().Be(OpCode.LoadLocal);
         instruction.Operand.Should().Be(1);
@@ -351,6 +353,7 @@ public class BytecodeGeneratorTests
                                         new CallExpressionNode(
                                             new LiteralExpressionNode("this", new()),
                                             [],
+                                            "testMethod",
                                             new())
                                     ]).Build()
                             ]).Build()
@@ -366,7 +369,7 @@ public class BytecodeGeneratorTests
         instruction.OpCode.Should().Be(OpCode.LoadConst);
         instruction = method.Instructions[1];
         instruction.OpCode.Should().Be(OpCode.Call);
-        instruction.Operand.Should().Be(0);
+        instruction.Operand.Should().Be(1);
     }
     
     [Test]
@@ -385,6 +388,7 @@ public class BytecodeGeneratorTests
                                             [
                                                 new LiteralExpressionNode(5, new()),
                                             ],
+                                            "testMethod",
                                             new())
                                     ]).Build()
                             ]).Build()
@@ -403,7 +407,7 @@ public class BytecodeGeneratorTests
         instruction.Operand.Should().Be(1);
         instruction = method.Instructions[2];
         instruction.OpCode.Should().Be(OpCode.Call);
-        instruction.Operand.Should().Be(0);
+        instruction.Operand.Should().Be(2);
     }
 
     [TestCase("+", OpCode.Add)]
@@ -426,11 +430,12 @@ public class BytecodeGeneratorTests
                             .WithMembers([
                                 new MethodDeclarationNodeBuilder()
                                     .WithBody([
+                                        new ExpressionStatementNode(
                                         new BinaryExpressionNode(
                                             op,
                                             new LiteralExpressionNode(5, new()),
                                             new LiteralExpressionNode(11, new()),
-                                            new())
+                                            new()), new())
                                     ]).Build()
                             ]).Build()
                     ]).Build()
@@ -438,7 +443,7 @@ public class BytecodeGeneratorTests
         var generator = new BytecodeGenerator();
         var result = generator.Generate(module);
         var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
-        method.Instructions.Should().HaveCount(3);
+        method.Instructions.Should().HaveCount(4);
         var instruction = method.Instructions[0];
         instruction.OpCode.Should().Be(OpCode.LoadConst);
         instruction = method.Instructions[1];
@@ -458,11 +463,13 @@ public class BytecodeGeneratorTests
                             .WithMembers([
                                 new MethodDeclarationNodeBuilder()
                                     .WithBody([
+                                        new ExpressionStatementNode(
                                         new BinaryExpressionNode(
                                             "e",
                                             new LiteralExpressionNode(5, new()),
                                             new LiteralExpressionNode(11, new()),
-                                            new())
+                                            new()),
+                                        new())
                                     ]).Build()
                             ]).Build()
                     ]).Build()

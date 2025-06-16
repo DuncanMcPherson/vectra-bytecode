@@ -8,8 +8,8 @@ namespace Vectra.Bytecode.Tests.TestUtils;
 public class MethodDeclarationNodeBuilder
 {
     private string _name = "TestMethod";
-    private List<string> _parameters = [];
-    private List<StatementNode> _body = [];
+    private List<Parameter> _parameters = [];
+    private List<IStatementNode> _body = [];
     private string _returnType = "void";
     
     public MethodDeclarationNodeBuilder WithName(string name)
@@ -18,13 +18,13 @@ public class MethodDeclarationNodeBuilder
         return this;
     }
     
-    public MethodDeclarationNodeBuilder WithParameters(List<string> parameters)
+    public MethodDeclarationNodeBuilder WithParameters(List<Parameter> parameters)
     {
         _parameters = parameters;
         return this;
     }
 
-    public MethodDeclarationNodeBuilder WithBody(List<StatementNode> body)
+    public MethodDeclarationNodeBuilder WithBody(List<IStatementNode> body)
     {
         _body = body;
         return this;

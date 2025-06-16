@@ -149,7 +149,6 @@ public class BytecodeGeneratorTests
         method.Instructions.Should().HaveCount(0);
         method.Parameters.Should().HaveCount(0);
         method.Name.Should().Be("TestMethod");
-        method.Constants.Should().HaveCount(0);
         method.LocalVariables.Should().HaveCount(1);
     }
 
@@ -187,7 +186,6 @@ public class BytecodeGeneratorTests
         method.Parameters[0].TypeName.Should().Be("any");
         method.Parameters[1].Name.Should().Be("param2");
         method.Parameters[1].TypeName.Should().Be("any");
-        method.Constants.Should().HaveCount(0);
         method.LocalVariables.Should().HaveCount(3);
     }
 

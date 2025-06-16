@@ -41,6 +41,8 @@ public class VbcProgram
     /// If the module is a library (<c>VbcModuleType.Library</c>), this property may be null or unused.
     /// </summary>
     public string? EntryPointMethod { get; init; }
+    
+    public List<object> Constants { get; init; } = [];
 
     /// <summary>
     /// Gets the list of dependencies required by the program.

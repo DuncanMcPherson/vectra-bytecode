@@ -18,5 +18,5 @@ public class VbcClass : VbcType
     /// The list provides access to all methods defined within the class, offering
     /// a structural representation for analyzing or processing the methods.
     /// </remarks>
-    public List<VbcMethod> Methods { get; init; }
+    public required List<VbcMethod> Methods { get; init; }
 }

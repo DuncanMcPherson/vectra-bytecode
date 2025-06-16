@@ -8,7 +8,7 @@ namespace Vectra.Bytecode.Tests.TestUtils;
 public class VectraASTModuleBuilder
 {
     private string _name = "Test";
-    private SpaceDeclarationNode _space;
+    private SpaceDeclarationNode _space = null!;
     private bool _isExecutable;
     
     public VectraASTModuleBuilder WithName(string name)

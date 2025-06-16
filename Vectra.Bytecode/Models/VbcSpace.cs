@@ -13,7 +13,7 @@ public class VbcSpace
     /// Gets the name of the VbcSpace, which serves as its identifier or description.
     /// This property is immutable and must be initialized during the creation of the instance.
     /// </summary>
-    public string Name { get; init; }
+    public required string Name { get; init; }
 
     /// <summary>
     /// Represents a collection of types associated with a specific space.
@@ -32,7 +32,7 @@ public class VbcSpace
     /// A list of objects of type <see cref="VbcType"/>. Returns an empty
     /// list if no types are defined for the space.
     /// </value>
-    public List<VbcType> Types { get; init; }
+    public required List<VbcType> Types { get; init; }
 
     /// <summary>
     /// Gets the collection of subspaces belonging to the current <see cref="VbcSpace"/> instance.
@@ -41,5 +41,5 @@ public class VbcSpace
     /// Each subspace is represented as a <see cref="VbcSpace"/> object, allowing hierarchical organization of bytecode spaces.
     /// This property can be used to traverse and manage a tree-like structure of nested bytecode spaces.
     /// </remarks>
-    public List<VbcSpace> Subspaces { get; init; }
+    public required List<VbcSpace> Subspaces { get; init; }
 }

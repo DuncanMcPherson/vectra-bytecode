@@ -20,5 +20,5 @@ public abstract class VbcType
     /// The Name property is immutable and must be set during object initialization.
     /// It represents the identifying or descriptive name for the specific VbcType instance.
     /// </remarks>
-    public string Name { get; init; }
+    public required string Name { get; init; }
 }

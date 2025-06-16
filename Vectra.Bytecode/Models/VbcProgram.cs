@@ -21,7 +21,7 @@ public class VbcProgram
     /// It is used to differentiate between various modules within the context of the program.
     /// This property is immutable and must be initialized when creating an instance of the <c>VbcProgram</c>.
     /// </remarks>
-    public string ModuleName { get; init; }
+    public required string ModuleName { get; init; }
 
     /// <summary>
     /// Represents the primary or root namespace of the program.
@@ -32,7 +32,7 @@ public class VbcProgram
     /// relevant to the application architecture. It serves as the central container
     /// for all program definitions and resources within the Vectra Bytecode model.
     /// </remarks>
-    public VbcSpace RootSpace { get; init; }
+    public required VbcSpace RootSpace { get; init; }
 
     /// <summary>
     /// Gets the name of the entry point method for the VbcProgram.
@@ -57,5 +57,6 @@ public class VbcProgram
     /// <value>
     /// A list of strings representing the program's dependencies.
     /// </value>
-    public List<string> Dependencies { get; init; }
+    // ReSharper disable once CollectionNeverUpdated.Global
+    public List<string> Dependencies { get; init; } = [];
 }

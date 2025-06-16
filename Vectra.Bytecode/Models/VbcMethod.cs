@@ -17,7 +17,7 @@ public class VbcMethod
     /// The value is immutable and is set during initialization.
     /// It is typically used for referencing or invoking the associated method.
     /// </remarks>
-    public string Name { get; init; }
+    public required string Name { get; init; }
 
     /// <summary>
     /// Gets the collection of parameters associated with this method.

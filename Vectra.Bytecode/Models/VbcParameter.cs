@@ -16,7 +16,7 @@ public class VbcParameter
     /// initialization, ensuring that the value remains consistent throughout the lifetime
     /// of the VbcParameter instance.
     /// </remarks>
-    public string Name { get; init; }
+    public required string Name { get; init; }
 
     /// <summary>
     /// Gets the name of the type associated with the parameter.
@@ -26,5 +26,5 @@ public class VbcParameter
     /// within the VbcParameter class. It is used to identify the type of
     /// the parameter as part of the bytecode model.
     /// </remarks>
-    public string TypeName { get; init; }
+    public required string TypeName { get; init; }
 }

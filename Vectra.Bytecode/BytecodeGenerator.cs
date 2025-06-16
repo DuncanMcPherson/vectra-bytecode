@@ -22,6 +22,7 @@ public class BytecodeGenerator : IAstVisitor<Unit>
             ModuleName = module.Name,
             ModuleType = module.IsExecutable ? VbcModuleType.Executable : VbcModuleType.Library,
             RootSpace = WalkSpace(module.RootSpace),
+            Constants = _currentConstants
         };
     }
 
@@ -153,7 +154,6 @@ public class BytecodeGenerator : IAstVisitor<Unit>
     private VbcMethod WalkMethod(MethodDeclarationNode method)
     {
         var parameters = method.Parameters.Select(type => new VbcParameter { Name = type.Name, TypeName = type.Type }).ToList(); // TODO: Update method.Parameters to provide both param name and type
-        _currentConstants = [];
         _currentInstructions = [];
         _localVariables =
         [
@@ -173,7 +173,6 @@ public class BytecodeGenerator : IAstVisitor<Unit>
         return new VbcMethod
         {
             Name = method.Name,
-            Constants = _currentConstants,
             Instructions = _currentInstructions,
             LocalVariables = _localVariables,
             Parameters = parameters

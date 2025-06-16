@@ -20,16 +20,6 @@ public class VbcMethod
     public string Name { get; init; }
 
     /// <summary>
-    /// Defines a collection of constant values used within the method's bytecode.
-    /// </summary>
-    /// <remarks>
-    /// This property contains values that are referenced in the method's instructions.
-    /// These constants can be of various types and are often used in conjunction with
-    /// specific instructions, such as LoadConst, for loading them into the execution context.
-    /// </remarks>
-    public List<object> Constants { get; init; } = [];
-
-    /// <summary>
     /// Gets the collection of parameters associated with this method.
     /// </summary>
     /// <remarks>

@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Vectra.Bytecode.Models;
 
 namespace Vectra.Bytecode;
 
+[ExcludeFromCodeCoverage]
 public class BytecodeReader
 {
     /// <summary>

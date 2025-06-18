@@ -6,8 +6,12 @@ internal static class Extensions
 {
     public static void WriteString(this BinaryWriter writer, string value)
     {
-        writer.Write(value.Length);
-        writer.Write(value);
+        // Convert the string to a byte array
+        var bytes = Encoding.UTF8.GetBytes(value);
+        // Write the length of the string
+        writer.Write(bytes.Length);
+        // Write the string bytes
+        writer.Write(bytes);
     }
 
     public static string ReadStringValue(this BinaryReader reader)

@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Vectra.Bytecode.Models;
 
 namespace Vectra.Bytecode;
@@ -81,10 +82,11 @@ public class BytecodeWriter
         {
             case VbcModuleType.Executable:
                 ArgumentNullException.ThrowIfNull(entryPoint);
+                var bytes = Encoding.UTF8.GetBytes(entryPoint);
                 // Write entry point name length
-                writer.Write((byte)entryPoint.Length);
+                writer.Write((byte)bytes.Length);
                 // Write entry point name
-                writer.Write(entryPoint);
+                writer.Write(bytes);
                 break;
             case VbcModuleType.Library:
                 writer.Write((byte)0);

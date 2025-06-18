@@ -123,7 +123,9 @@ public class BytecodeGenerator : IAstVisitor<Unit>
         
         var methodNameIndex = AddConstant(node.MethodName);
         
+        // TODO: combine method name index and argument count into a single int
         _currentInstructions.Add(new Instruction(OpCode.Call, methodNameIndex));
+        // TODO: determine whether we need to keep or pop the return value
 
         return Unit.Value;
     }

@@ -132,8 +132,7 @@ public class BytecodeWriter
                 break;
             case string s:
                 writer.Write((byte)3); // type tag: string
-                writer.Write(s.Length); // string length
-                writer.Write(s); // string value
+                writer.WriteString(s);
                 break;
             default:
                 throw new InvalidOperationException($"Invalid constant type: {value.GetType().Name}");

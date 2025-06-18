@@ -193,7 +193,7 @@ public class BytecodeReader
             parameters.Add(ReadParameter(reader));
         }
         
-        var instructionCount = (int)reader.ReadByte();
+        var instructionCount = reader.ReadInt32();
         var instructions = new List<Instruction>();
         for (var i = 0; i < instructionCount; i++)
             instructions.Add(ReadInstruction(reader));

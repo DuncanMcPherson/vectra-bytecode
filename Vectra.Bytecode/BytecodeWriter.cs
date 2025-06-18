@@ -191,11 +191,11 @@ public class BytecodeWriter
             WriteParameter(parameter, writer);
         }
         
-        writer.Write(method.LocalVariables.Count);
-        foreach (var localVariable in method.LocalVariables)
-        {
-            writer.WriteString(localVariable);
-        }
+        // writer.Write(method.LocalVariables.Count);
+        // foreach (var localVariable in method.LocalVariables)
+        // {
+            // writer.WriteString(localVariable);
+        // }
         
         writer.Write(method.Instructions.Count);
         foreach (var instruction in method.Instructions)

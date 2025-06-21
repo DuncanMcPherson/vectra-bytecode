@@ -14,7 +14,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vectra.Bytecode.Tests", "Ve
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{48A8116E-648A-4EF5-80E1-EE515926711A}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\release.yaml = .github\workflows\release.yaml
 		.github\workflows\pr.yaml = .github\workflows\pr.yaml
 		.github\workflows\release-bytecode.yaml = .github\workflows\release-bytecode.yaml
 	EndProjectSection

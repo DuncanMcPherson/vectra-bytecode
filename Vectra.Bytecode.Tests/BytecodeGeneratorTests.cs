@@ -46,7 +46,7 @@ public class BytecodeGeneratorTests
         result.Dependencies.Should().HaveCount(0);
         result.ModuleName.Should().Be("Test");
     }
-    
+
     [Test]
     public void Should_ReturnLibraryProgram_When_RootSpaceExists_AND_ModuleIsNotExecutable()
     {
@@ -296,7 +296,8 @@ public class BytecodeGeneratorTests
                             .WithMembers([
                                 new MethodDeclarationNodeBuilder()
                                     .WithBody([
-                                        new ExpressionStatementNode(new IdentifierExpressionNode("this", new()), new())
+                                        new CallExpressionNode(
+                                            new IdentifierExpressionNode("foo", new()), [], "test", new())
                                     ]).Build()
                             ]).Build()
                     ]).Build()
@@ -307,9 +308,9 @@ public class BytecodeGeneratorTests
         method.Instructions.Should().HaveCount(2);
         var instruction = method.Instructions[0];
         instruction.OpCode.Should().Be(OpCode.LoadLocal);
-        instruction.Operand.Should().Be(0);
+        instruction.Operand.Should().Be(1);
     }
-    
+
     [Test]
     public void Should_HandleIdentifierExpression_With_NoPreexistingIdentifier()
     {
@@ -321,9 +322,11 @@ public class BytecodeGeneratorTests
                             .WithMembers([
                                 new MethodDeclarationNodeBuilder()
                                     .WithBody([
-                                        new ExpressionStatementNode(
-                                        new IdentifierExpressionNode("foo", new()),
-                                        new())
+                                        new CallExpressionNode(
+                                            new IdentifierExpressionNode("foo", new()),
+                                            [],
+                                            "test",
+                                            new())
                                     ]).Build()
                             ]).Build()
                     ]).Build()
@@ -360,7 +363,7 @@ public class BytecodeGeneratorTests
 
         var generator = new BytecodeGenerator();
         var result = generator.Generate(module);
-        
+
         var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
         method.Instructions.Should().HaveCount(2);
         var instruction = method.Instructions[0];
@@ -369,7 +372,7 @@ public class BytecodeGeneratorTests
         instruction.OpCode.Should().Be(OpCode.Call);
         instruction.Operand.Should().Be(1);
     }
-    
+
     [Test]
     public void Should_HandleCallExpression_With_Arguments()
     {
@@ -395,7 +398,7 @@ public class BytecodeGeneratorTests
 
         var generator = new BytecodeGenerator();
         var result = generator.Generate(module);
-        
+
         var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
         method.Instructions.Should().HaveCount(3);
         var instruction = method.Instructions[0];

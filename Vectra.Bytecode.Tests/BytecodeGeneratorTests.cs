@@ -46,7 +46,7 @@ public class BytecodeGeneratorTests
         result.Dependencies.Should().HaveCount(0);
         result.ModuleName.Should().Be("Test");
     }
-    
+
     [Test]
     public void Should_ReturnLibraryProgram_When_RootSpaceExists_AND_ModuleIsNotExecutable()
     {
@@ -168,7 +168,12 @@ public class BytecodeGeneratorTests
                                     .WithName("TestMethod")
                                     .WithReturnType("void")
                                     .WithParameters([
+<<<<<<< Updated upstream
                                         new Parameter("param1", "any"), new Parameter("param2", "any")
+=======
+                                        new Parameter("param1", "any"),
+                                        new Parameter("param2", "any")
+>>>>>>> Stashed changes
                                     ]).Build()
                             ]).Build()
                     ]).Build()
@@ -296,7 +301,12 @@ public class BytecodeGeneratorTests
                             .WithMembers([
                                 new MethodDeclarationNodeBuilder()
                                     .WithBody([
+<<<<<<< Updated upstream
                                         new ExpressionStatementNode(new IdentifierExpressionNode("this", new()), new())
+=======
+                                        new CallExpressionNode(
+                                            new IdentifierExpressionNode("foo", new()), [], "test", new())
+>>>>>>> Stashed changes
                                     ]).Build()
                             ]).Build()
                     ]).Build()
@@ -307,9 +317,9 @@ public class BytecodeGeneratorTests
         method.Instructions.Should().HaveCount(2);
         var instruction = method.Instructions[0];
         instruction.OpCode.Should().Be(OpCode.LoadLocal);
-        instruction.Operand.Should().Be(0);
+        instruction.Operand.Should().Be(1);
     }
-    
+
     [Test]
     public void Should_HandleIdentifierExpression_With_NoPreexistingIdentifier()
     {
@@ -321,9 +331,17 @@ public class BytecodeGeneratorTests
                             .WithMembers([
                                 new MethodDeclarationNodeBuilder()
                                     .WithBody([
+<<<<<<< Updated upstream
                                         new ExpressionStatementNode(
                                         new IdentifierExpressionNode("foo", new()),
                                         new())
+=======
+                                        new CallExpressionNode(
+                                            new IdentifierExpressionNode("foo", new()),
+                                            [],
+                                            "test",
+                                            new())
+>>>>>>> Stashed changes
                                     ]).Build()
                             ]).Build()
                     ]).Build()
@@ -351,7 +369,11 @@ public class BytecodeGeneratorTests
                                         new CallExpressionNode(
                                             new LiteralExpressionNode("this", new()),
                                             [],
+<<<<<<< Updated upstream
                                             "testMethod",
+=======
+                                            "test",
+>>>>>>> Stashed changes
                                             new())
                                     ]).Build()
                             ]).Build()
@@ -360,7 +382,7 @@ public class BytecodeGeneratorTests
 
         var generator = new BytecodeGenerator();
         var result = generator.Generate(module);
-        
+
         var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
         method.Instructions.Should().HaveCount(2);
         var instruction = method.Instructions[0];
@@ -369,7 +391,7 @@ public class BytecodeGeneratorTests
         instruction.OpCode.Should().Be(OpCode.Call);
         instruction.Operand.Should().Be(1);
     }
-    
+
     [Test]
     public void Should_HandleCallExpression_With_Arguments()
     {
@@ -386,7 +408,11 @@ public class BytecodeGeneratorTests
                                             [
                                                 new LiteralExpressionNode(5, new()),
                                             ],
+<<<<<<< Updated upstream
                                             "testMethod",
+=======
+                                            "test",
+>>>>>>> Stashed changes
                                             new())
                                     ]).Build()
                             ]).Build()
@@ -395,7 +421,7 @@ public class BytecodeGeneratorTests
 
         var generator = new BytecodeGenerator();
         var result = generator.Generate(module);
-        
+
         var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
         method.Instructions.Should().HaveCount(3);
         var instruction = method.Instructions[0];
@@ -429,11 +455,19 @@ public class BytecodeGeneratorTests
                                 new MethodDeclarationNodeBuilder()
                                     .WithBody([
                                         new ExpressionStatementNode(
+<<<<<<< Updated upstream
                                         new BinaryExpressionNode(
                                             op,
                                             new LiteralExpressionNode(5, new()),
                                             new LiteralExpressionNode(11, new()),
                                             new()), new())
+=======
+                                            new BinaryExpressionNode(
+                                                op,
+                                                new LiteralExpressionNode(5, new()),
+                                                new LiteralExpressionNode(11, new()),
+                                                new()), new())
+>>>>>>> Stashed changes
                                     ]).Build()
                             ]).Build()
                     ]).Build()
@@ -462,12 +496,20 @@ public class BytecodeGeneratorTests
                                 new MethodDeclarationNodeBuilder()
                                     .WithBody([
                                         new ExpressionStatementNode(
+<<<<<<< Updated upstream
                                         new BinaryExpressionNode(
                                             "e",
                                             new LiteralExpressionNode(5, new()),
                                             new LiteralExpressionNode(11, new()),
                                             new()),
                                         new())
+=======
+                                            new BinaryExpressionNode(
+                                                "e",
+                                                new LiteralExpressionNode(5, new()),
+                                                new LiteralExpressionNode(11, new()),
+                                                new()), new())
+>>>>>>> Stashed changes
                                     ]).Build()
                             ]).Build()
                     ]).Build()

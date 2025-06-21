@@ -155,7 +155,12 @@ public class BytecodeGenerator : IAstVisitor<Unit>
 
     private VbcMethod WalkMethod(MethodDeclarationNode method)
     {
+<<<<<<< Updated upstream
         var parameters = method.Parameters.Select(type => new VbcParameter { Name = type.Name, TypeName = type.Type }).ToList(); // TODO: Update method.Parameters to provide both param name and type
+=======
+        var parameters = method.Parameters.Select(type => new VbcParameter { Name = type.Name, TypeName = type.Type }).ToList();
+        _currentConstants = [];
+>>>>>>> Stashed changes
         _currentInstructions = [];
         _localVariables =
         [

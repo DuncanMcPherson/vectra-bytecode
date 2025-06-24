@@ -153,6 +153,24 @@ public class BytecodeGenerator : IAstVisitor<Unit>
         return Unit.Value;
     }
 
+    public Unit VisitVariableDeclaration(VariableDeclarationNode node)
+    {
+        _localVariables.Add(node.Name);
+
+        if (node.Initializer != null)
+        {
+            node.Initializer.Accept(this);
+        }
+        else
+        {
+            _currentInstructions.Add(new Instruction(OpCode.LoadDefault));
+        }
+
+        _currentInstructions.Add(new Instruction(OpCode.StoreLocal, _localVariables.Count - 1));
+        
+        return Unit.Value;
+    }
+
     private VbcMethod WalkMethod(MethodDeclarationNode method)
     {
         var parameters = method.Parameters.Select(type => new VbcParameter { Name = type.Name, TypeName = type.Type }).ToList(); // TODO: Update method.Parameters to provide both param name and type

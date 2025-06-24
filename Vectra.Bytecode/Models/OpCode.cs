@@ -7,6 +7,7 @@ public enum OpCode : byte
     LoadLocal = 0x02,     // operand: local variable index
     StoreLocal = 0x03,    // operand: local variable index
     Pop = 0x04,
+    LoadDefault = 0x05,
 
     // Arithmetic
     Add = 0x10,

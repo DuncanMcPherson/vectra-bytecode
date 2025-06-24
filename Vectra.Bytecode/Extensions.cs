@@ -1,7 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Vectra.Bytecode;
 
+[ExcludeFromCodeCoverage]
 internal static class Extensions
 {
     public static void WriteString(this BinaryWriter writer, string value)

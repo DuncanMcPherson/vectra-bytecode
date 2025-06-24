@@ -23,7 +23,7 @@ jobs:
         with:
           dotnet-version: '9.0.x'
           app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          deploy-key: ${{ secrets.DEPLOY_KEY }}
+          deploy-key: ${{ secrets.WIKI }}
   noop-on-skip:
     needs: build
     if: ${{ needs.build.result == 'skipped' }}

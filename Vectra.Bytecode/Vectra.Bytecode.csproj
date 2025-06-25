@@ -15,7 +15,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="Vectra.AST" Version="2.3.0" />
+        <PackageReference Include="Vectra.AST" Version="2.5.0" />
     </ItemGroup>
 
 </Project>

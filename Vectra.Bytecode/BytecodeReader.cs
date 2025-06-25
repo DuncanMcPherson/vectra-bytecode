@@ -164,6 +164,21 @@ public class BytecodeReader
     private static VbcClass ReadClass(BinaryReader reader)
     {
         var className = reader.ReadStringValue();
+        
+        var fieldCount = reader.ReadInt32();
+        var fields = new List<VbcField>();
+        for (var i = 0; i < fieldCount; i++)
+        {
+            fields.Add(ReadField(reader));
+        }
+        
+        var propertyCount = reader.ReadInt32();
+        var properties = new List<VbcProperty>();
+        for (var i = 0; i < propertyCount; i++)
+        {
+            properties.Add(ReadProperty(reader));
+        }
+        
         var methodCount = reader.ReadInt32();
         var methods = new List<VbcMethod>();
         for (var i = 0; i < methodCount; i++)
@@ -174,7 +189,9 @@ public class BytecodeReader
         return new VbcClass
         {
             Name = className,
-            Methods = methods
+            Methods = methods,
+            Fields = fields,
+            Properties = properties
         };
     }
     
@@ -202,6 +219,35 @@ public class BytecodeReader
             Name = methodName,
             Parameters = parameters,
             Instructions = instructions
+        };
+    }
+
+    private static VbcField ReadField(BinaryReader reader)
+    {
+        var name = reader.ReadStringValue();
+        var type = reader.ReadStringValue();
+        var initialValue = ReadConstant(reader);
+        return new VbcField
+        {
+            Name = name,
+            TypeName = type,
+            InitialValue = initialValue
+        };
+    }
+
+    private static VbcProperty ReadProperty(BinaryReader reader)
+    {
+        var name = reader.ReadStringValue();
+        var type = reader.ReadStringValue();
+        var hasGetter = reader.ReadBoolean();
+        var hasSetter = reader.ReadBoolean();
+
+        return new VbcProperty
+        {
+            Name = name,
+            Type = type,
+            HasGetter = hasGetter,
+            HasSetter = hasSetter
         };
     }
     

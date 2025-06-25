@@ -19,4 +19,6 @@ public class VbcClass : VbcType
     /// a structural representation for analyzing or processing the methods.
     /// </remarks>
     public required List<VbcMethod> Methods { get; init; }
+    public required List<VbcField> Fields { get; init; }
+    public required List<VbcProperty> Properties { get; init; }
 }

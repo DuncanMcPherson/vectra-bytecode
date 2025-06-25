@@ -172,9 +172,37 @@ public class BytecodeWriter
     {
         writer.WriteString(cls.Name);
         
+        writer.Write(cls.Fields.Count);
+        foreach (var field in cls.Fields)
+        {
+            WriteField(field, writer);
+        }
+        
+        writer.Write(cls.Properties.Count);
+        foreach (var prop in cls.Properties)
+        {
+            WriteProperty(prop, writer);
+        }
+        
         writer.Write(cls.Methods.Count);
         foreach (var method in cls.Methods)
             WriteMethod(method, writer);
+    }
+
+    private static void WriteField(VbcField field, BinaryWriter writer)
+    {
+        writer.WriteString(field.Name);
+        writer.WriteString(field.TypeName ?? ""); // Using 0 length string for null type names
+        // TODO: Consider handling null in a different manner
+        WriteConstant(field.InitialValue ?? 0, writer); // Using 0 for null initial values
+    }
+
+    private static void WriteProperty(VbcProperty property, BinaryWriter writer)
+    {
+        writer.WriteString(property.Name);
+        writer.WriteString(property.Type);
+        writer.Write(property.HasGetter);
+        writer.Write(property.HasSetter);
     }
 
     /// <summary>

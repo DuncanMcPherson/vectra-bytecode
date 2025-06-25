@@ -60,6 +60,14 @@ public class BytecodeGenerator : IAstVisitor<Unit>
             Methods = cls.Members
                 .OfType<MethodDeclarationNode>()
                 .Select(WalkMethod)
+                .ToList(),
+            Fields = cls.Members
+                .OfType<FieldDeclarationNode>()
+                .Select(WalkField)
+                .ToList(),
+            Properties = cls.Members
+                .OfType<PropertyDeclarationNode>()
+                .Select(WalkProperty)
                 .ToList()
         };
     }
@@ -171,6 +179,20 @@ public class BytecodeGenerator : IAstVisitor<Unit>
         return Unit.Value;
     }
 
+    [ExcludeFromCodeCoverage]
+    [Obsolete("This method should never be hit. `WalkClass` handles these calls instead")]
+    public Unit VisitFieldDeclaration(FieldDeclarationNode node)
+    {
+        throw new NotImplementedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    [Obsolete("This method should never be hit. `WalkClass` handles these calls instead")]
+    public Unit VisitPropertyDeclaration(PropertyDeclarationNode node)
+    {
+        throw new NotImplementedException();
+    }
+
     private VbcMethod WalkMethod(MethodDeclarationNode method)
     {
         var parameters = method.Parameters.Select(type => new VbcParameter { Name = type.Name, TypeName = type.Type }).ToList(); // TODO: Update method.Parameters to provide both param name and type
@@ -200,6 +222,28 @@ public class BytecodeGenerator : IAstVisitor<Unit>
         };
     }
     
+    private VbcField WalkField(FieldDeclarationNode field)
+    {
+        return new VbcField
+        {
+            Name = field.Name,
+            TypeName = field.Type,
+            InitialValue = field.Initializer != null ? EvaluateConstantExpression(field.Initializer) : null,
+        };
+    }
+
+    private VbcProperty WalkProperty(PropertyDeclarationNode node)
+    {
+        // TODO: Add support for getter and setter methods
+        return new VbcProperty
+        {
+            Name = node.Name,
+            Type = node.Type,
+            HasGetter = node.HasGetter,
+            HasSetter = node.HasSetter
+        };
+    }
+    
     private int AddConstant(object value)
     {
         var index = _currentConstants.IndexOf(value);
@@ -207,5 +251,16 @@ public class BytecodeGenerator : IAstVisitor<Unit>
         index = _currentConstants.Count;
         _currentConstants.Add(value);
         return index;
+    }
+
+    // TODO: Add support for other types of expressions
+    private object? EvaluateConstantExpression(IExpressionNode expression)
+    {
+        return expression switch
+        {
+            LiteralExpressionNode lit => lit.Value,
+            _ => throw new NotSupportedException(
+                $"Constant expression of type {expression.GetType().Name} is not supported.")
+        };
     }
 }

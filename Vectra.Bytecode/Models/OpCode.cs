@@ -18,6 +18,7 @@ public enum OpCode : byte
     // Method calls
     Call = 0x20,          // operand: function index or ID
     Ret = 0x21,           // return from function
+    New = 0x22,
     
     // Comparison
     Eq = 0x30,

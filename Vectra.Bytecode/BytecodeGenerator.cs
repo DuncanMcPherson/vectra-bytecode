@@ -13,8 +13,11 @@ public class BytecodeGenerator : IAstVisitor<Unit>
     private List<object> _currentConstants = [];
     private List<Instruction> _currentInstructions = [];
     private List<string> _localVariables = [];
+    private Dictionary<string, int> _typeMap = new();
     public VbcProgram Generate(VectraASTModule module)
     {
+        ArgumentNullException.ThrowIfNull(module);
+        GenerateTypePool(module.RootSpace);
         return new VbcProgram
         {
             Dependencies = [],
@@ -24,6 +27,19 @@ public class BytecodeGenerator : IAstVisitor<Unit>
             RootSpace = WalkSpace(module.RootSpace),
             Constants = _currentConstants
         };
+    }
+
+    private void GenerateTypePool(SpaceDeclarationNode space)
+    {
+        foreach (var type in space.Declarations)
+        {
+            _typeMap[type.Name] = _typeMap.Count;
+        }
+        
+        foreach (var subspace in space.ChildSpaces)
+        {
+            GenerateTypePool(subspace);
+        }
     }
 
     private VbcSpace WalkSpace(SpaceDeclarationNode space)
@@ -133,7 +149,6 @@ public class BytecodeGenerator : IAstVisitor<Unit>
         var argumentCount = node.Arguments.Count;
         var packed = (argumentCount << 24) | (methodNameIndex & 0x00FFFFFF); 
         
-        // TODO: combine method name index and argument count into a single int
         _currentInstructions.Add(new Instruction(OpCode.Call, packed));
         // TODO: determine whether we need to keep or pop the return value
 
@@ -197,7 +212,18 @@ public class BytecodeGenerator : IAstVisitor<Unit>
 
     public Unit VisitNewExpression(NewExpressionNode node)
     {
-        throw new NotImplementedException();
+        foreach (var argument in node.Arguments)
+        {
+            argument.Accept(this);
+        }
+
+        if (!_typeMap.TryGetValue(node.TypeName, out var typeIndex))
+        {
+            throw new Exception($"Unknown type '{node.TypeName}'");
+        }
+        var operand = (node.Arguments.Count << 24) | (typeIndex & 0x00FFFFFF);
+        _currentInstructions.Add(new Instruction(OpCode.New, operand));
+        return Unit.Value;
     }
 
     private VbcMethod WalkMethod(MethodDeclarationNode method)

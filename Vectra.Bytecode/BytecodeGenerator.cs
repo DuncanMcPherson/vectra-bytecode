@@ -130,9 +130,11 @@ public class BytecodeGenerator : IAstVisitor<Unit>
         }
         
         var methodNameIndex = AddConstant(node.MethodName);
+        var argumentCount = node.Arguments.Count;
+        var packed = (argumentCount << 24) | (methodNameIndex & 0x00FFFFFF); 
         
         // TODO: combine method name index and argument count into a single int
-        _currentInstructions.Add(new Instruction(OpCode.Call, methodNameIndex));
+        _currentInstructions.Add(new Instruction(OpCode.Call, packed));
         // TODO: determine whether we need to keep or pop the return value
 
         return Unit.Value;
@@ -189,6 +191,11 @@ public class BytecodeGenerator : IAstVisitor<Unit>
     [ExcludeFromCodeCoverage]
     [Obsolete("This method should never be hit. `WalkClass` handles these calls instead")]
     public Unit VisitPropertyDeclaration(PropertyDeclarationNode node)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Unit VisitNewExpression(NewExpressionNode node)
     {
         throw new NotImplementedException();
     }

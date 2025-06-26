@@ -31,6 +31,7 @@ public class BytecodeGenerator : IAstVisitor<Unit>
 
     private void GenerateTypePool(SpaceDeclarationNode space)
     {
+        ArgumentNullException.ThrowIfNull(space);
         foreach (var type in space.Declarations)
         {
             _typeMap[type.Name] = _typeMap.Count;

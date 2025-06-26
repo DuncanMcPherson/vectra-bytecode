@@ -408,7 +408,10 @@ public class BytecodeGeneratorTests
         instruction.Operand.Should().Be(1);
         instruction = method.Instructions[2];
         instruction.OpCode.Should().Be(OpCode.Call);
-        instruction.Operand.Should().Be(2);
+        var methodIndex = instruction.Operand & 0x00FFFFFF;
+        methodIndex.Should().Be(2);
+        var arity = (instruction.Operand >> 24) & 0xFF;
+        arity.Should().Be(1);
     }
 
     [TestCase("+", OpCode.Add)]
@@ -477,6 +480,336 @@ public class BytecodeGeneratorTests
             ).Build();
         var generator = new BytecodeGenerator();
         generator.Invoking(x => x.Generate(module)).Should().Throw<NotSupportedException>();
+    }
+
+    [Test]
+    public void Should_HandleVariableDeclaration_Without_Initializer()
+    {
+        var module = new VectraASTModuleBuilder()
+            .WithSpace(
+                new SpaceDeclarationNodeBuilder()
+                    .WithDeclarations([
+                        new ClassDeclarationNodeBuilder()
+                            .WithMembers([
+                                new MethodDeclarationNodeBuilder()
+                                    .WithBody([
+                                        new VariableDeclarationNode(
+                                            "testVar", 
+                                            "any", 
+                                            null, 
+                                            new())
+                                ]).Build()
+                        ]).Build()
+                ]).Build()
+        ).Build();
+
+        var generator = new BytecodeGenerator();
+        var result = generator.Generate(module);
+        var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
+        
+        method.Instructions.Should().HaveCount(2);
+        method.LocalVariables.Should().Contain("testVar");
+        
+        method.Instructions[0].OpCode.Should().Be(OpCode.LoadDefault);
+        method.Instructions[1].OpCode.Should().Be(OpCode.StoreLocal);
+        method.Instructions[1].Operand.Should().Be(1); // Index 1 because "this" is at index 0
+    }
+
+    [Test]
+    public void Should_HandleVariableDeclaration_With_Initializer()
+    {
+        var module = new VectraASTModuleBuilder()
+            .WithSpace(
+                new SpaceDeclarationNodeBuilder()
+                    .WithDeclarations([
+                        new ClassDeclarationNodeBuilder()
+                            .WithMembers([
+                                new MethodDeclarationNodeBuilder()
+                                    .WithBody([
+                                        new VariableDeclarationNode(
+                                            "testVar", 
+                                            "any", 
+                                            new LiteralExpressionNode(42, new()),
+                                            new())
+                                ]).Build()
+                        ]).Build()
+                ]).Build()
+        ).Build();
+
+        var generator = new BytecodeGenerator();
+        var result = generator.Generate(module);
+        var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
+        
+        method.Instructions.Should().HaveCount(2);
+        method.LocalVariables.Should().Contain("testVar");
+        
+        method.Instructions[0].OpCode.Should().Be(OpCode.LoadConst);
+        method.Instructions[0].Operand.Should().Be(0); // First constant
+        method.Instructions[1].OpCode.Should().Be(OpCode.StoreLocal);
+        method.Instructions[1].Operand.Should().Be(1); // Index 1 because "this" is at index 0
+    }
+
+    [Test]
+    public void Should_HandleMultipleVariableDeclarations_With_CorrectIndices()
+    {
+        var module = new VectraASTModuleBuilder()
+            .WithSpace(
+                new SpaceDeclarationNodeBuilder()
+                    .WithDeclarations([
+                        new ClassDeclarationNodeBuilder()
+                            .WithMembers([
+                                new MethodDeclarationNodeBuilder()
+                                    .WithBody([
+                                        new VariableDeclarationNode("var1", "any", null, new()),
+                                        new VariableDeclarationNode("var2", "any", null, new())
+                                    ]).Build()
+                        ]).Build()
+                ]).Build()
+        ).Build();
+
+        var generator = new BytecodeGenerator();
+        var result = generator.Generate(module);
+        var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
+        
+        method.Instructions.Should().HaveCount(4);
+        method.LocalVariables.Should().HaveCount(3); // "this" + var1 + var2
+        method.LocalVariables.Should().ContainInOrder(["this", "var1", "var2"]);
+        
+        // First variable
+        method.Instructions[0].OpCode.Should().Be(OpCode.LoadDefault);
+        method.Instructions[1].OpCode.Should().Be(OpCode.StoreLocal);
+        method.Instructions[1].Operand.Should().Be(1);
+        
+        // Second variable
+        method.Instructions[2].OpCode.Should().Be(OpCode.LoadDefault);
+        method.Instructions[3].OpCode.Should().Be(OpCode.StoreLocal);
+        method.Instructions[3].Operand.Should().Be(2);
+    }
+
+    [Test]
+    public void Should_HandleVariableDeclaration_With_ComplexInitializer()
+    {
+        var module = new VectraASTModuleBuilder()
+            .WithSpace(
+                new SpaceDeclarationNodeBuilder()
+                    .WithDeclarations([
+                        new ClassDeclarationNodeBuilder()
+                            .WithMembers([
+                                new MethodDeclarationNodeBuilder()
+                                    .WithBody([
+                                        new VariableDeclarationNode(
+                                            "result",
+                                            "any",
+                                            new BinaryExpressionNode(
+                                                "+",
+                                                new LiteralExpressionNode(5, new()),
+                                                new LiteralExpressionNode(3, new()),
+                                                new()),
+                                            new())
+                                ]).Build()
+                        ]).Build()
+                ]).Build()
+        ).Build();
+
+        var generator = new BytecodeGenerator();
+        var result = generator.Generate(module);
+        var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
+        
+        method.Instructions.Should().HaveCount(4);
+        method.LocalVariables.Should().Contain("result");
+        
+        method.Instructions[0].OpCode.Should().Be(OpCode.LoadConst);
+        method.Instructions[1].OpCode.Should().Be(OpCode.LoadConst);
+        method.Instructions[2].OpCode.Should().Be(OpCode.Add);
+        method.Instructions[3].OpCode.Should().Be(OpCode.StoreLocal);
+        method.Instructions[3].Operand.Should().Be(1);
+    }
+
+    [Test]
+    public void Should_HandleNewExpression_Without_Arguments()
+    {
+        var module = new VectraASTModuleBuilder()
+            .WithSpace(
+                new SpaceDeclarationNodeBuilder()
+                    .WithDeclarations([
+                        new ClassDeclarationNodeBuilder()
+                            .WithName("TestClass")
+                            .WithMembers([
+                                new MethodDeclarationNodeBuilder()
+                                    .WithBody([
+                                        new ExpressionStatementNode(
+                                            new NewExpressionNode("TestClass", [], new()),
+                                            new())
+                                ]).Build()
+                        ]).Build()
+                ]).Build()
+        ).Build();
+
+        var generator = new BytecodeGenerator();
+        var result = generator.Generate(module);
+        var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
+        
+        method.Instructions.Should().HaveCount(2); // New + Pop
+        method.Instructions[0].OpCode.Should().Be(OpCode.New);
+        method.Instructions[0].Operand.Should().Be(0); // Type index 0, 0 arguments
+    }
+
+    [Test]
+    public void Should_HandleNewExpression_With_Arguments()
+    {
+        var module = new VectraASTModuleBuilder()
+            .WithSpace(
+                new SpaceDeclarationNodeBuilder()
+                    .WithDeclarations([
+                        new ClassDeclarationNodeBuilder()
+                            .WithName("TestClass")
+                            .WithMembers([
+                                new MethodDeclarationNodeBuilder()
+                                    .WithBody([
+                                        new ExpressionStatementNode(
+                                            new NewExpressionNode(
+                                                "TestClass",
+                                                [new LiteralExpressionNode(42, new())],
+                                                new()),
+                                            new())
+                                ]).Build()
+                        ]).Build()
+                ]).Build()
+        ).Build();
+
+        var generator = new BytecodeGenerator();
+        var result = generator.Generate(module);
+        var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
+        
+        method.Instructions.Should().HaveCount(3); // LoadConst + New + Pop
+        method.Instructions[0].OpCode.Should().Be(OpCode.LoadConst);
+        method.Instructions[1].OpCode.Should().Be(OpCode.New);
+        
+        var operand = method.Instructions[1].Operand;
+        var argCount = (operand >> 24) & 0xFF;
+        var typeIndex = operand & 0x00FFFFFF;
+        
+        argCount.Should().Be(1);
+        typeIndex.Should().Be(0);
+    }
+
+    [Test]
+    public void Should_ThrowException_When_TypeNotFound()
+    {
+        var module = new VectraASTModuleBuilder()
+            .WithSpace(
+                new SpaceDeclarationNodeBuilder()
+                    .WithDeclarations([
+                        new ClassDeclarationNodeBuilder()
+                            .WithName("TestClass")
+                            .WithMembers([
+                                new MethodDeclarationNodeBuilder()
+                                    .WithBody([
+                                        new ExpressionStatementNode(
+                                            new NewExpressionNode(
+                                                "UnknownClass",
+                                                [],
+                                                new()),
+                                            new())
+                                ]).Build()
+                        ]).Build()
+                ]).Build()
+        ).Build();
+
+        var generator = new BytecodeGenerator();
+        generator.Invoking(x => x.Generate(module))
+            .Should().Throw<Exception>()
+            .WithMessage("Unknown type 'UnknownClass'");
+    }
+
+    [Test]
+    public void Should_HandleNewExpression_With_MultipleArguments()
+    {
+        var module = new VectraASTModuleBuilder()
+            .WithSpace(
+                new SpaceDeclarationNodeBuilder()
+                    .WithDeclarations([
+                        new ClassDeclarationNodeBuilder()
+                            .WithName("TestClass")
+                            .WithMembers([
+                                new MethodDeclarationNodeBuilder()
+                                    .WithBody([
+                                        new ExpressionStatementNode(
+                                            new NewExpressionNode(
+                                                "TestClass",
+                                                [
+                                                    new LiteralExpressionNode(1, new()),
+                                                    new LiteralExpressionNode(2, new()),
+                                                    new LiteralExpressionNode(3, new())
+                                                ],
+                                                new()),
+                                            new())
+                                ]).Build()
+                        ]).Build()
+                ]).Build()
+        ).Build();
+
+        var generator = new BytecodeGenerator();
+        var result = generator.Generate(module);
+        var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
+        
+        method.Instructions.Should().HaveCount(5); // 3 LoadConst + New + Pop
+        method.Instructions[3].OpCode.Should().Be(OpCode.New);
+        
+        var operand = method.Instructions[3].Operand;
+        var argCount = (operand >> 24) & 0xFF;
+        var typeIndex = operand & 0x00FFFFFF;
+        
+        argCount.Should().Be(3);
+        typeIndex.Should().Be(0);
+    }
+
+    [Test]
+    public void Should_HandleNewExpression_With_ComplexArguments()
+    {
+        var module = new VectraASTModuleBuilder()
+            .WithSpace(
+                new SpaceDeclarationNodeBuilder()
+                    .WithDeclarations([
+                        new ClassDeclarationNodeBuilder()
+                            .WithName("TestClass")
+                            .WithMembers([
+                                new MethodDeclarationNodeBuilder()
+                                    .WithBody([
+                                        new ExpressionStatementNode(
+                                            new NewExpressionNode(
+                                                "TestClass",
+                                                [
+                                                    new BinaryExpressionNode(
+                                                        "+",
+                                                        new LiteralExpressionNode(1, new()),
+                                                        new LiteralExpressionNode(2, new()),
+                                                        new())
+                                                ],
+                                                new()),
+                                            new())
+                                ]).Build()
+                        ]).Build()
+                ]).Build()
+        ).Build();
+
+        var generator = new BytecodeGenerator();
+        var result = generator.Generate(module);
+        var method = (result.RootSpace.Types[0] as VbcClass)!.Methods[0];
+        
+        method.Instructions.Should().HaveCount(5); // 2 LoadConst + Add + New + Pop
+        
+        method.Instructions[0].OpCode.Should().Be(OpCode.LoadConst);
+        method.Instructions[1].OpCode.Should().Be(OpCode.LoadConst);
+        method.Instructions[2].OpCode.Should().Be(OpCode.Add);
+        method.Instructions[3].OpCode.Should().Be(OpCode.New);
+        
+        var operand = method.Instructions[3].Operand;
+        var argCount = (operand >> 24) & 0xFF;
+        var typeIndex = operand & 0x00FFFFFF;
+        
+        argCount.Should().Be(1);
+        typeIndex.Should().Be(0);
     }
 
     private class TestClass : ITypeDeclarationNode
